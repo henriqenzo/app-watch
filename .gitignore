@@ -1,0 +1,93 @@
+# ==========================
+# macOS
+# ==========================
+
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# ==========================
+# Xcode
+# ==========================
+
+# User-specific data
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+*.xccheckout
+
+# Workspace user data
+*.xcworkspace/xcuserdata/
+
+# Build products
+build/
+DerivedData/
+
+# Index
+*.hmap
+
+# Archives & Debug Symbols
+*.ipa
+*.dSYM
+*.dSYM.zip
+*.xcarchive
+
+# Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+# ==========================
+# Swift Package Manager
+# ==========================
+
+.build/
+.swiftpm/
+
+# Se você NÃO quer versionar o Package.resolved, descomente:
+# Package.resolved
+
+# ==========================
+# CocoaPods
+# ==========================
+
+# Pods/
+# *.xcworkspace
+
+# ==========================
+# Carthage
+# ==========================
+
+Carthage/Build/
+
+# ==========================
+# fastlane
+# ==========================
+
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+
+# ==========================
+# Logs
+# ==========================
+
+*.log
+
+# ==========================
+# Editor
+# ==========================
+
+.vscode/
+.idea/
+
+# ==========================
+# Temporary files
+# ==========================
+
+*.swp
+*.swo
+*~
