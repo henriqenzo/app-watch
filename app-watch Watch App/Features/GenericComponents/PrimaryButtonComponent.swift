@@ -26,7 +26,7 @@ enum ButtonVariant {
 
 }
 
-struct PrimaryButton: View {
+struct PrimaryButtonComponent: View {
     var label: String
     var variantStyle: ButtonVariant = .primary
     var action: () -> Void
@@ -50,7 +50,7 @@ struct PrimaryButton: View {
 }
 
 #Preview {
-    PrimaryButton(label: "Iniciar", variantStyle:  .primary) {
+    PrimaryButtonComponent(label: "Iniciar", variantStyle:  .primary) {
         print("Oi")
     }
 }
