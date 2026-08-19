@@ -26,17 +26,6 @@ git checkout -b feature/nome-da-feature
 
 # 6. Realizar merge após aprovação e pipeline verde
 ```
-
-### 1.3 Regras de Branch Protection
-
-| Regra | `main` | `develop` |
-|---|---|---|
-| Push direto bloqueado | ✅ | ✅ |
-| PR obrigatória | ✅ | ✅ |
-| Mínimo de aprovações | 2 | 1 |
-| Pipeline verde obrigatório | ✅ | ✅ |
-| Estratégia de merge | Squash | Merge commit |
-
 ---
 
 ## 2. Padrões de Commit
