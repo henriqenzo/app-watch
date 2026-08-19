@@ -14,6 +14,6 @@ struct AppTypography {
     static let largeTitle: Font = .system(size: 34, weight: .bold)
     static let title1: Font = .system(size: 28, weight: .bold)
     static let title3: Font = .system(size: 20, weight: .semibold)
-    static let subheadline: Font = .system(size: 15, weight: .regular)
+    static let subheadlineSemibold: Font = .system(size: 15, weight: .semibold)
     static let caption: Font = .system(size: 12, weight: .regular)
 }
