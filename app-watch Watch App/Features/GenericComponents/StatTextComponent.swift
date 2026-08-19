@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct StatTextComponent: View {
-    var value: String
-    var label: String
     var metric: Metric
 
     var body: some View {
@@ -17,7 +15,7 @@ struct StatTextComponent: View {
             Text(metric.value)
                 .foregroundStyle(Color.textPrimary)
                 .font(AppTypography.title3)
-            Text(label)
+            Text(metric.label)
                 .foregroundStyle(Color.textDisable)
                 .font(AppTypography.caption)
         }
@@ -26,8 +24,6 @@ struct StatTextComponent: View {
 
 #Preview {
     StatTextComponent(
-        value: "54:32",
-        label: "TEMPO",
         metric: .duration(seconds: 3000)
     )
 }
