@@ -41,7 +41,7 @@ struct PrimaryButtonComponent: View {
                     .font(AppTypography.subheadlineSemibold)
             }
         )
-        .frame(height: 42)
+        .frame(height: 38)
         .background(variantStyle.background)
         .cornerRadius(AppRadius.buttonRadius)
         .buttonStyle(.plain)

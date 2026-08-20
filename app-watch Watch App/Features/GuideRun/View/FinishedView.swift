@@ -25,39 +25,29 @@ struct FinishedView: View {
                 // MARK: - Selo de conclusão
                 ZStack {
                     Circle()
-                        .fill(Color.accentPink.opacity(0.18))
+                        .fill(Color.brandPrimary.opacity(0.18))
                         .frame(width: 76, height: 76)
 
                     Image(systemName: "checkmark")
                         .font(.system(size: 30, weight: .semibold))
-                        .foregroundStyle(Color.accentPink)
+                        .foregroundStyle(Color.brandPrimary)
                 }
 
                 // MARK: - Textos
                 Text("Parabéns!")
-                    .font(.title3.bold())
-                    .foregroundStyle(.white)
-                    .padding(.top, 12)
+                    .font(AppTypography.title3)
+                    .padding(.top, AppSizes.xmedium)
 
                 Text("Treino concluído")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                    .padding(.top, 2)
+                    .font(AppTypography.footnote)
+                    .foregroundStyle(Color.textDisable)
+                    .padding(.top, AppSizes.xsmall)
 
-                Spacer(minLength: 0)
+                Spacer(minLength: AppSizes.small)
 
-                ///TODO: trocar botão depois
-                Button(action: onSeeSummary) {
-                    Text("Ver resumo")
-                        .font(.headline)
-                        .foregroundStyle(.black)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 12)
-                        .background(Color.accentPink, in: Capsule())
-                }
-                .buttonStyle(.plain)
+                PrimaryButtonComponent(label: "Ver Resumo", action: onSeeSummary)
             }
-            .padding(.horizontal, 8)
+            .padding(.horizontal, AppSizes.medium)
         }
     }
 }
@@ -157,8 +147,8 @@ private struct ConfettiPiece: Identifiable {
 
     static func make(count: Int) -> [ConfettiPiece] {
         let palette: [Color] = [
-            .accentPink,
-            .accentPink.opacity(0.65),
+            .brandPrimary,
+            .brandPrimary.opacity(0.65),
             .white,
             .white.opacity(0.75)
         ]
@@ -180,10 +170,6 @@ private struct ConfettiPiece: Identifiable {
     }
 }
 
-// TODO: mover para o arquivo de cores/tema quando o design system for criado.
-private extension Color {
-    static let accentPink = Color(red: 1.0, green: 0.25, blue: 0.53)
-}
 
 #Preview {
     FinishedView()
