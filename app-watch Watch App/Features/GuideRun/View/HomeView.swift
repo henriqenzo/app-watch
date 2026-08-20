@@ -9,52 +9,44 @@ import Foundation
 import SwiftUI
 
 struct HomeView: View {
+    @State private var showGoalView = false
+    
     var body: some View {
-        VStack(spacing: 14) {
+        NavigationStack {
             VStack(spacing: 12) {
-                Image(systemName: "figure.run")
-                    .font(.title2)
-                    .background(
-                        Circle()
-                            .fill(Color.accent.opacity(0.4))
-                            .frame(width: 50, height: 50))
-                Text("Vamos correr?")
-                    .font(.headline)
-                    .fontWeight(.bold)
-            }
-            
-            VStack(spacing: 8) {
-                Button {
-                    
-                } label: {
-                    Text("Iniciar treino guiado")
-                        .font(.footnote)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(.black)
-                        .padding(.vertical, 10)
-                    
+                VStack(spacing: 8) {
+                    Image(systemName: "figure.run")
+                        .font(.title2)
+                        .background(
+                            Circle()
+                                .fill(Color.accent.opacity(0.4))
+                                .frame(width: 50, height: 50))
+                    Text("Vamos correr?")
+                        .font(.headline)
+                        .fontWeight(.bold)
                 }
-                .frame(maxWidth: .infinity)
-                .background(Color.accentColor)
-                .clipShape(RoundedRectangle(cornerRadius: 13))
-                .buttonStyle(.plain)
                 
-                Button {
+                VStack(spacing: 8) {
+                    PrimaryButtonComponent(
+                        label: "Iniciar treino guiado",
+                        variantStyle: .primary
+                    ) {
+                        showGoalView = true
+                    }
                     
-                } label: {
-                    Text("Iniciar treino livre")
-                        .font(.footnote)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(.white)
-                        .padding(.vertical, 10)
+                    PrimaryButtonComponent(
+                        label: "Iniciar treino livre",
+                        variantStyle: .secondary
+                    ) {
+                        
+                    }
                 }
-                .frame(maxWidth: .infinity)
-                .background(.backgroundLight)
-                .clipShape(RoundedRectangle(cornerRadius: 13))
-                .buttonStyle(.plain)
+                .padding(.horizontal)
+                
             }
-            .padding(.horizontal)
-            
+            .navigationDestination(isPresented: $showGoalView) {
+                GoalView()
+            }
         }
     }
 }
