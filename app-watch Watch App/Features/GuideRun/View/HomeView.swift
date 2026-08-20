@@ -10,16 +10,16 @@ import SwiftUI
 
 struct HomeView: View {
     var body: some View {
-        VStack(spacing: 16) {
-            VStack(spacing: 20) {
+        VStack(spacing: 14) {
+            VStack(spacing: 12) {
                 Image(systemName: "figure.run")
-                    .font(.title)
+                    .font(.title2)
                     .background(
                         Circle()
                             .fill(Color.accent.opacity(0.4))
-                            .frame(width: 60, height: 60))
+                            .frame(width: 50, height: 50))
                 Text("Vamos correr?")
-                    .font(.title3)
+                    .font(.headline)
                     .fontWeight(.bold)
             }
             
@@ -28,10 +28,10 @@ struct HomeView: View {
                     
                 } label: {
                     Text("Iniciar treino guiado")
-                        .font(.caption2)
+                        .font(.footnote)
                         .fontWeight(.semibold)
                         .foregroundStyle(.black)
-                        .padding(.vertical, 12)
+                        .padding(.vertical, 10)
                     
                 }
                 .frame(maxWidth: .infinity)
@@ -43,17 +43,18 @@ struct HomeView: View {
                     
                 } label: {
                     Text("Iniciar treino livre")
-                        .font(.caption2)
+                        .font(.footnote)
                         .fontWeight(.semibold)
                         .foregroundStyle(.white)
-                        .padding(.vertical, 12)
+                        .padding(.vertical, 10)
                 }
                 .frame(maxWidth: .infinity)
-                .background(Color.dark)
+                .background(.backgroundLight)
                 .clipShape(RoundedRectangle(cornerRadius: 13))
                 .buttonStyle(.plain)
             }
             .padding(.horizontal)
+            
         }
     }
 }
