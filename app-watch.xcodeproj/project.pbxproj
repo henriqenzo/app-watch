@@ -44,7 +44,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Features/GuideRun/View/GuideRunView.swift,
-				Features/GuideRun/ViewModel/GuideRunViewModel.swift,
 			);
 			target = 2ACCAFEE3034D146005B8706 /* app-watch Watch App */;
 		};
@@ -56,7 +55,6 @@
 			buildPhase = 2ACCAFED3034D146005B8706 /* Resources */;
 			membershipExceptions = (
 				Features/GuideRun/View/GuideRunView.swift,
-				Features/GuideRun/ViewModel/GuideRunViewModel.swift,
 			);
 		};
 /* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
