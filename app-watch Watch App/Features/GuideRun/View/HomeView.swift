@@ -19,7 +19,7 @@ struct HomeView: View {
                         .font(.title2)
                         .background(
                             Circle()
-                                .fill(Color.accent.opacity(0.4))
+                                .fill(Color.brandPrimary.opacity(0.4))
                                 .frame(width: 50, height: 50))
                     Text("Vamos correr?")
                         .font(.headline)
