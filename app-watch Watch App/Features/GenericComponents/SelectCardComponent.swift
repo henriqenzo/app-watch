@@ -31,6 +31,9 @@ struct SelectCardComponent: View {
                     Text(subtitle)
                         .font(AppTypography.caption)
                         .foregroundStyle(Color.textSecondary)
+                        .lineLimit(2)
+                        .fixedSize(horizontal: false, vertical: true)
+
                 }
 
             }
