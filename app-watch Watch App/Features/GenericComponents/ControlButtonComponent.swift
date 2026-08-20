@@ -11,12 +11,15 @@ enum ControlButtonVariant {
     case pause
     case stop
     case play
+    case deactive
 
     var background: Color {
         switch self {
         case .pause: return Color.alert
         case .stop: return Color.danger
         case .play: return Color.success
+        case .deactive:
+            return Color.backgroundLight
         }
     }
     var icon: String {
@@ -24,6 +27,7 @@ enum ControlButtonVariant {
         case .pause: return "pause.fill"
         case .stop: return "stop.fill"
         case .play: return "play.fill"
+        case .deactive: return "stop.fill"
         }
     }
 
@@ -33,18 +37,24 @@ struct ControlButtonComponent: View {
     var action: () -> Void
     var variantStyle: ControlButtonVariant
     var body: some View {
-        Button(
-            action: action,
-            label: {
-                Image(systemName: "\(variantStyle.icon)")
+        ZStack {
+            Circle()
+                .fill(variantStyle.background)
+                .frame(width: 60, height: 60)
+                .blur(radius: 8)
+                .opacity(0.35)
+
+            Button(action: action) {
+                Image(systemName: variantStyle.icon)
                     .foregroundStyle(Color.black)
-                    .font(AppTypography.largeTitle)
+                    .font(AppTypography.title3)
             }
-        )
-        .frame(width: 68, height: 68)
-        .background(variantStyle.background)
-        .buttonStyle(.plain)
-        .clipShape(Circle())
+            .frame(width: 60, height: 60)
+            .background(variantStyle.background)
+            .buttonStyle(.plain)
+            .clipShape(Circle())
+        }
+
     }
 }
 

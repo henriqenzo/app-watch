@@ -1,7 +1,26 @@
 //
-//  ViewModel.swift
-//  app-watch
+//  GuideRunViewModel.swift
+//  app-watch Watch App
 //
-//  Created by Débora Cristina Silva Ferreira on 19/08/26.
+//  Created by Filipi Romão on 20/08/26.
 //
 
+import Combine
+import Foundation
+
+class GuideRunViewModel: ObservableObject {
+    @Published var isRunning: Bool = true
+
+    func pauseResumeRunning() {
+        isRunning.toggle()
+    }
+
+    func stopRunning() {
+        if isRunning {
+            print("Tem que pausar primeiro")
+        } else {
+            print("Treino finalizado")
+        }
+    }
+
+}
