@@ -13,20 +13,20 @@ struct HomeView: View {
     
     var body: some View {
         NavigationStack {
-            VStack(spacing: 12) {
-                VStack(spacing: 8) {
+            VStack(spacing: AppSizes.xmedium) {
+                VStack(spacing: AppSizes.medium) {
                     Image(systemName: "figure.run")
                         .font(.title2)
                         .background(
                             Circle()
-                                .fill(Color.accent.opacity(0.4))
+                                .fill(Color.brandPrimary.opacity(0.4))
                                 .frame(width: 50, height: 50))
                     Text("Vamos correr?")
                         .font(.headline)
                         .fontWeight(.bold)
                 }
                 
-                VStack(spacing: 8) {
+                VStack(spacing: AppSizes.medium) {
                     PrimaryButtonComponent(
                         label: "Iniciar treino guiado",
                         variantStyle: .primary
