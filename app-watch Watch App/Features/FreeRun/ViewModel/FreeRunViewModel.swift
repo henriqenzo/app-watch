@@ -7,9 +7,38 @@
 
 import Combine
 import Foundation
+import HealthKit
 
-class FreeRunViewModel: ObservableObject {
-    @Published var isRunning: Bool = true
+@Observable
+class FreeRunViewModel: RunViewModelProtocol {
+    
+    var metrics = WorkoutMetrics()
+    var elapsedTime: TimeInterval = 0
+    var sessionState: HKWorkoutSessionState = .notStarted
+    var isAuthorized = false
+    var isRunning = true
+    
+    private var workoutSessionManager: WorkoutSessionManagerProtocol
+    
+    init(workoutSessionManager: WorkoutSessionManagerProtocol) {
+        self.workoutSessionManager = workoutSessionManager
+        
+        self.workoutSessionManager.onMetricsUpdate = { [weak self] metrics in
+            self?.metrics = metrics
+        }
+        
+        self.workoutSessionManager.onElapsedTimeUpdate = { [weak self] elapsedTime in
+            self?.elapsedTime = elapsedTime
+        }
+        
+        self.workoutSessionManager.onSessionStateUpdate = { [weak self] sessionState in
+            self?.sessionState = sessionState
+        }
+        
+        self.workoutSessionManager.onAuthorizationUpdate = { [weak self] isAuthorized in
+            self?.isAuthorized = isAuthorized
+        }
+    }
 
     func pauseResumeRunning() {
         isRunning.toggle()

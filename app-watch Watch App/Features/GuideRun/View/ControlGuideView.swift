@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct ControlRunningView: View {
-    @StateObject private var guideVM = GuideRunViewModel()
+    
+    @State private var guideVM = AppContainer.shared.makeGuideRunViewModel()
 
     var body: some View {
         HStack(spacing: AppSizes.xlarge) {

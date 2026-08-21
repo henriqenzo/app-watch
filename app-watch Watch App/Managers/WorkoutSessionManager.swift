@@ -8,23 +8,16 @@
 import HealthKit
 import Combine
 
-class WorkoutSessionManager: NSObject, ObservableObject {
+class WorkoutSessionManager: NSObject, WorkoutSessionManagerProtocol {
     
-    @Published var heartRate: Double = 0
-    @Published var averageHeartRate: Double = 0
-    @Published var activeEnergyBurned: Double = 0
-    @Published var stepCount: Int = 0
-    @Published var distanceWalkingRunning: Double = 0
-    @Published var runningStrideLength: Double = 0
+    var onMetricsUpdate: ((WorkoutMetrics) -> Void)?
+    var onElapsedTimeUpdate: ((TimeInterval) -> Void)?
+    var onSessionStateUpdate: ((HKWorkoutSessionState) -> Void)?
+    var onAuthorizationUpdate: ((Bool) -> Void)?
     
-    @Published var elapsedTime: TimeInterval = 0
-    
-    @Published var sessionState: HKWorkoutSessionState = .notStarted
-    @Published var isAuthorized: Bool = false
-    
-    let healthStore = HKHealthStore()
-    var session: HKWorkoutSession?
-    var builder: HKLiveWorkoutBuilder?
+    private let healthStore = HKHealthStore()
+    private var session: HKWorkoutSession?
+    private var builder: HKLiveWorkoutBuilder?
     
     private var timer: AnyCancellable?
     
@@ -46,7 +39,7 @@ class WorkoutSessionManager: NSObject, ObservableObject {
         
         healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead) { [weak self] success, error in
             DispatchQueue.main.async {
-                self?.isAuthorized = success
+                self?.onAuthorizationUpdate?(success)
             }
         }
     }
@@ -105,7 +98,7 @@ class WorkoutSessionManager: NSObject, ObservableObject {
             .autoconnect()
             .sink { [weak self] _ in
                 guard let self = self, let builder = self.builder else { return }
-                self.elapsedTime = builder.elapsedTime(at: Date())
+                onElapsedTimeUpdate?(builder.elapsedTime(at: Date()))
             }
     }
     
@@ -116,15 +109,9 @@ class WorkoutSessionManager: NSObject, ObservableObject {
     
     func resetWorkoutState() {
         stopTimer()
-        heartRate = 0
-        averageHeartRate = 0
-        activeEnergyBurned = 0
-        stepCount = 0
-        distanceWalkingRunning = 0
-        runningStrideLength = 0
+        
         session = nil
         builder = nil
-        sessionState = .notStarted
     }
 }
 
@@ -132,7 +119,7 @@ extension WorkoutSessionManager: HKWorkoutSessionDelegate {
     func workoutSession(_ workoutSession: HKWorkoutSession, didChangeTo toState: HKWorkoutSessionState, from fromState: HKWorkoutSessionState, date: Date) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.sessionState = toState
+            self.onSessionStateUpdate?(toState)
             
             switch toState {
             case .running:
@@ -140,7 +127,7 @@ extension WorkoutSessionManager: HKWorkoutSessionDelegate {
             case .paused:
                 self.stopTimer()
                 if let builder = self.builder {
-                    self.elapsedTime = builder.elapsedTime(at: date)
+                    onElapsedTimeUpdate?(builder.elapsedTime(at: Date()))
                 }
             case .stopped:
                 builder?.endCollection(withEnd: date) { [weak self] success, error in
@@ -176,13 +163,16 @@ extension WorkoutSessionManager: HKWorkoutSessionDelegate {
 
 extension WorkoutSessionManager: HKLiveWorkoutBuilderDelegate {
     func workoutBuilder(_ workoutBuilder: HKLiveWorkoutBuilder, didCollectDataOf collectedTypes: Set<HKSampleType>) {
+        
+        var metrics = WorkoutMetrics()
+        
         for type in collectedTypes {
             guard let quantityType = type as? HKQuantityType else { continue }
             
             let statistics = workoutBuilder.statistics(for: quantityType)
             
             DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
+                guard self != nil else { return }
                 
                 switch quantityType {
                 // 1. Frequência Cardíaca (BPM - Mais recente)
@@ -190,36 +180,40 @@ extension WorkoutSessionManager: HKLiveWorkoutBuilderDelegate {
                     let bpmUnit = HKUnit.count().unitDivided(by: .minute())
                     let currentValue = statistics?.mostRecentQuantity()?.doubleValue(for: bpmUnit) ?? 0
                     let averageValue = statistics?.averageQuantity()?.doubleValue(for: bpmUnit) ?? 0
-                    self.heartRate = currentValue
-                    self.averageHeartRate = averageValue
+                    metrics.heartRate = currentValue
+                    metrics.averageHeartRate = averageValue
                     
                 // 2. Calorias Ativas (kcal - Soma acumulada)
                 case HKQuantityType.quantityType(forIdentifier: .activeEnergyBurned):
                     let calorieUnit = HKUnit.kilocalorie()
                     let value = statistics?.sumQuantity()?.doubleValue(for: calorieUnit) ?? 0
-                    self.activeEnergyBurned = value
+                    metrics.activeEnergyBurned = value
                     
                 // 3. Contagem de Passos (Passos - Soma acumulada)
                 case HKQuantityType.quantityType(forIdentifier: .stepCount):
                     let stepUnit = HKUnit.count()
                     let value = statistics?.sumQuantity()?.doubleValue(for: stepUnit) ?? 0
-                    self.stepCount = Int(value)
+                    metrics.stepCount = Int(value)
                     
                 // 4. Distância a Pé/Corrida (Metros - Soma acumulada)
                 case HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning):
                     let meterUnit = HKUnit.meter() // ou .meterUnit(with: .kilo) para km
                     let value = statistics?.sumQuantity()?.doubleValue(for: meterUnit) ?? 0
-                    self.distanceWalkingRunning = value
+                    metrics.distanceWalkingRunning = value
                     
                 // 5. Comprimento da Passada (Metros - Mais recente ou média)
                 case HKQuantityType.quantityType(forIdentifier: .runningStrideLength):
                     let meterUnit = HKUnit.meter()
                     let value = statistics?.mostRecentQuantity()?.doubleValue(for: meterUnit) ?? 0
-                    self.runningStrideLength = value
+                    metrics.runningStrideLength = value
                     
                 default:
                     break
                 }
+            }
+            
+            DispatchQueue.main.async {
+                self.onMetricsUpdate?(metrics)
             }
         }
     }

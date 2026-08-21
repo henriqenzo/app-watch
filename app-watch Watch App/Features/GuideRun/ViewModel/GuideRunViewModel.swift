@@ -7,9 +7,38 @@
 
 import Combine
 import Foundation
+import HealthKit
 
-class GuideRunViewModel: ObservableObject {
-    @Published var isRunning: Bool = true
+@Observable
+class GuideRunViewModel: RunViewModelProtocol {
+    
+    var metrics = WorkoutMetrics()
+    var elapsedTime: TimeInterval = 0
+    var sessionState: HKWorkoutSessionState = .notStarted
+    var isAuthorized = false
+    var isRunning = true
+    
+    private var workoutManager: WorkoutSessionManagerProtocol
+    
+    init(workoutManager: WorkoutSessionManagerProtocol) {
+        self.workoutManager = workoutManager
+        
+        self.workoutManager.onMetricsUpdate = { [weak self] metrics in
+            self?.metrics = metrics
+        }
+        
+        self.workoutManager.onElapsedTimeUpdate = { [weak self] elapsedTime in
+            self?.elapsedTime = elapsedTime
+        }
+        
+        self.workoutManager.onSessionStateUpdate = { [weak self] sessionState in
+            self?.sessionState = sessionState
+        }
+        
+        self.workoutManager.onAuthorizationUpdate = { [weak self] isAuthorized in
+            self?.isAuthorized = isAuthorized
+        }
+    }
 
     func pauseResumeRunning() {
         isRunning.toggle()
@@ -21,6 +50,10 @@ class GuideRunViewModel: ObservableObject {
         } else {
             print("Treino finalizado")
         }
+    }
+    
+    func editRunning() {
+        print("Vai editar")
     }
 
 }
