@@ -14,19 +14,18 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             VStack {
-//                NavigationLink(destination: SelectDistanceView()) {
-//                    Text("Distance")
-//                }
-//                
-//                NavigationLink(destination: SelectPaceView()) {
-//                    Text("Pace")
-//                }
-//                
-//                NavigationLink(destination: SelectDurationView()) {
-//                    Text("Duration")
-//                }
-                StatRowComponent(metric: freeVM.metrics.heartRate)
-                StatRowComponent(metric: freeVM.metrics.stepCount)
+                NavigationLink(destination: SelectDistanceView()) {
+                    Text("Distance")
+                }
+                
+                NavigationLink(destination: SelectPaceView()) {
+                    Text("Pace")
+                }
+                
+                NavigationLink(destination: SelectDurationView()) {
+                    Text("Duration")
+                }
+             
             }
         }
     }

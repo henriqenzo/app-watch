@@ -181,32 +181,32 @@ extension WorkoutSessionManager: HKLiveWorkoutBuilderDelegate {
                     let bpmUnit = HKUnit.count().unitDivided(by: .minute())
                     let current = statistics?.mostRecentQuantity()?.doubleValue(for: bpmUnit) ?? 0
                     let average = statistics?.averageQuantity()?.doubleValue(for: bpmUnit) ?? 0
-                    self?.currentMetrics.heartRate = .heartRate(bpm: Int(current))
-                    self?.currentMetrics.averageHeartRate = .averageHeartRate(bpm: Int(average))
+                    self?.currentMetrics.heartRate = Int(current)
+                    self?.currentMetrics.averageHeartRate = Int(average)
                     
                 // 2. Calorias Ativas (kcal - Soma acumulada)
                 case HKQuantityType.quantityType(forIdentifier: .activeEnergyBurned):
                     let calorieUnit = HKUnit.kilocalorie()
                     let value = statistics?.sumQuantity()?.doubleValue(for: calorieUnit) ?? 0
-                    self?.currentMetrics.activeEnergyBurned = .calories(value)
+                    self?.currentMetrics.activeEnergyBurned = value
                     
                 // 3. Contagem de Passos (Passos - Soma acumulada)
                 case HKQuantityType.quantityType(forIdentifier: .stepCount):
                     let stepUnit = HKUnit.count()
                     let value = statistics?.sumQuantity()?.doubleValue(for: stepUnit) ?? 0
-                    self?.currentMetrics.stepCount = .stepCount(Int(value))
+                    self?.currentMetrics.stepCount = Int(value)
                     
                 // 4. Distância a Pé/Corrida (Metros - Soma acumulada)
                 case HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning):
                     let meterUnit = HKUnit.meter() // ou .meterUnit(with: .kilo) para km
                     let value = statistics?.sumQuantity()?.doubleValue(for: meterUnit) ?? 0
-                    self?.currentMetrics.distanceWalkingRunning = .distance(kilometers: value / 1000)
+                    self?.currentMetrics.distanceWalkingRunning = value / 1000
                     
                 // 5. Comprimento da Passada (Metros - Mais recente ou média)
                 case HKQuantityType.quantityType(forIdentifier: .runningStrideLength):
                     let meterUnit = HKUnit.meter()
                     let value = statistics?.mostRecentQuantity()?.doubleValue(for: meterUnit) ?? 0
-                    self?.currentMetrics.runningStrideLength = .strideLength(meters: value)
+                    self?.currentMetrics.runningStrideLength = value
                     
                 default:
                     break

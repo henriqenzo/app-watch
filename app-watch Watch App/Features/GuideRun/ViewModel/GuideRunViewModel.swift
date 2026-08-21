@@ -11,9 +11,7 @@ import HealthKit
 
 @Observable
 class GuideRunViewModel: RunViewModelProtocol {
-    
-    var metrics = WorkoutMetrics()
-    var elapsedTime: TimeInterval = 0
+    var metricsWorkout = WorkoutMetrics()
     var sessionState: HKWorkoutSessionState = .notStarted
     var isAuthorized = false
     var isRunning = true
@@ -24,11 +22,11 @@ class GuideRunViewModel: RunViewModelProtocol {
         self.workoutManager = workoutManager
         
         self.workoutManager.onMetricsUpdate = { [weak self] metrics in
-            self?.metrics = metrics
+            self?.metricsWorkout = metrics
         }
         
         self.workoutManager.onElapsedTimeUpdate = { [weak self] elapsedTime in
-            self?.elapsedTime = elapsedTime
+            self?.metricsWorkout.duration = elapsedTime
         }
         
         self.workoutManager.onSessionStateUpdate = { [weak self] sessionState in
