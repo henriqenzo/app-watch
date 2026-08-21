@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct ControlFreeView: View {
-    @StateObject private var freeVM = FreeRunViewModel()
+    
+    @State private var freeVM = AppContainer.shared.makeFreeRunViewModel()
+    
     var body: some View {
         VStack(spacing: AppSizes.large) {
             HStack(spacing: AppSizes.xlarge) {
