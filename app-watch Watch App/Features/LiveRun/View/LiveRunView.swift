@@ -21,7 +21,7 @@ struct LiveRunView: View {
 
     var body: some View {
         ZStack {
-            Color.appBackground.ignoresSafeArea()
+            Color.background.ignoresSafeArea()
 
             VStack(spacing: 0) {
                 sensorsRow
@@ -33,7 +33,7 @@ struct LiveRunView: View {
                 Spacer(minLength: AppSizes.medium)
 
                 Divider()
-                    .overlay(Color.appTextSecondary.opacity(0.25))
+                    .overlay(Color.textDisable.opacity(0.25))
 
                 statsRow
                     .padding(.top, AppSizes.medium)
@@ -48,7 +48,7 @@ struct LiveRunView: View {
         HStack(spacing: AppSizes.medium) {
             HStack(spacing: AppSizes.small) {
                 Circle()
-                    .fill(Color.appDanger)
+                    .fill(Color.danger)
                     .frame(width: 6, height: 6)
 
                 metric(value: "\(heartRate)", unit: "bpm")
@@ -64,11 +64,11 @@ struct LiveRunView: View {
         HStack(alignment: .firstTextBaseline, spacing: AppSizes.xsmall) {
             Text(value)
                 .font(AppTypography.title3)
-                .foregroundStyle(Color.appTextPrimary)
+                .foregroundStyle(Color.textPrimary)
 
             Text(unit)
                 .font(AppTypography.caption)
-                .foregroundStyle(Color.appTextSecondary)
+                .foregroundStyle(Color.textDisable)
         }
         .lineLimit(1)
         .minimumScaleFactor(0.7)
@@ -81,11 +81,11 @@ struct LiveRunView: View {
             Text("PACE ATUAL")
                 .font(AppTypography.caption)
                 .tracking(1)
-                .foregroundStyle(Color.appTextSecondary)
+                .foregroundStyle(Color.textDisable)
 
             Text(pace)
                 .font(AppTypography.largeTitle)
-                .foregroundStyle(Color.appPrimary)
+                .foregroundStyle(Color.brandPrimary)
                 .lineLimit(1)
                 .minimumScaleFactor(0.6)
 
@@ -143,12 +143,12 @@ struct LiveRunView: View {
             HStack(alignment: .firstTextBaseline, spacing: AppSizes.xsmall) {
                 Text(value)
                     .font(AppTypography.title3)
-                    .foregroundStyle(Color.appTextPrimary)
+                    .foregroundStyle(Color.textPrimary)
 
                 if let unit {
                     Text(unit)
                         .font(AppTypography.caption)
-                        .foregroundStyle(Color.appTextSecondary)
+                        .foregroundStyle(Color.textDisable)
                 }
             }
             .lineLimit(1)
@@ -157,7 +157,7 @@ struct LiveRunView: View {
             Text(label)
                 .font(AppTypography.caption)
                 .tracking(0.5)
-                .foregroundStyle(Color.appTextSecondary)
+                .foregroundStyle(Color.textDisable)
         }
     }
 }
@@ -187,22 +187,10 @@ enum PaceFeedback {
 
     var color: Color {
         switch self {
-        case .onTarget: .appSuccess
-        case .tooSlow, .tooFast: .appAlert
+        case .onTarget: .success
+        case .tooSlow, .tooFast: .alert
         }
     }
-}
-
-// MARK: - Cores do catálogo
-
-private extension Color {
-    static let appBackground = Color("backgroundColor")
-    static let appPrimary = Color("primary")
-    static let appSuccess = Color("successColor")
-    static let appAlert = Color("alertColor")
-    static let appDanger = Color("dangerColor")
-    static let appTextPrimary = Color("textPrimary")
-    static let appTextSecondary = Color("textSecondary")
 }
 
 #Preview("Guiado · no pace") {
