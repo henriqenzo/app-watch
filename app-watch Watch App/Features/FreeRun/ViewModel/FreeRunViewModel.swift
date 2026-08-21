@@ -1,8 +1,59 @@
 //
-//  FreeRunViewModel.swift
+//  GuideRunViewModel.swift
 //  app-watch Watch App
 //
-//  Created by Débora Cristina Silva Ferreira on 19/08/26.
+//  Created by Filipi Romão on 20/08/26.
 //
 
+import Combine
 import Foundation
+import HealthKit
+
+@Observable
+class FreeRunViewModel: RunViewModelProtocol {
+    
+    var metrics = WorkoutMetrics()
+    var elapsedTime: TimeInterval = 0
+    var sessionState: HKWorkoutSessionState = .notStarted
+    var isAuthorized = false
+    var isRunning = true
+    
+    private var workoutSessionManager: WorkoutSessionManagerProtocol
+    
+    init(workoutSessionManager: WorkoutSessionManagerProtocol) {
+        self.workoutSessionManager = workoutSessionManager
+        
+        self.workoutSessionManager.onMetricsUpdate = { [weak self] metrics in
+            self?.metrics = metrics
+        }
+        
+        self.workoutSessionManager.onElapsedTimeUpdate = { [weak self] elapsedTime in
+            self?.elapsedTime = elapsedTime
+        }
+        
+        self.workoutSessionManager.onSessionStateUpdate = { [weak self] sessionState in
+            self?.sessionState = sessionState
+        }
+        
+        self.workoutSessionManager.onAuthorizationUpdate = { [weak self] isAuthorized in
+            self?.isAuthorized = isAuthorized
+        }
+    }
+
+    func pauseResumeRunning() {
+        isRunning.toggle()
+    }
+
+    func stopRunning() {
+        if isRunning {
+            print("Tem que pausar primeiro")
+        } else {
+            print("Treino finalizado")
+        }
+    }
+
+    func editRunning() {
+        print("Vai editar")
+    }
+
+}
