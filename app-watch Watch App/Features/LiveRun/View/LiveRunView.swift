@@ -87,7 +87,8 @@ struct LiveRunView: View {
                 .font(AppTypography.largeTitle)
                 .foregroundStyle(Color.brandPrimary)
                 .lineLimit(1)
-                .minimumScaleFactor(0.6)
+                .minimumScaleFactor(0.85)
+                .layoutPriority(1)
 
             if let paceFeedback {
                 paceChip(paceFeedback)
