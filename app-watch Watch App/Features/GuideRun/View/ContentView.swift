@@ -8,20 +8,25 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @State var freeVM = AppContainer.shared.makeFreeRunViewModel()
+    
     var body: some View {
         NavigationStack {
             VStack {
-                NavigationLink(destination: SelectDistanceView()) {
-                    Text("Distance")
-                }
-                
-                NavigationLink(destination: SelectPaceView()) {
-                    Text("Pace")
-                }
-                
-                NavigationLink(destination: SelectDurationView()) {
-                    Text("Duration")
-                }
+//                NavigationLink(destination: SelectDistanceView()) {
+//                    Text("Distance")
+//                }
+//                
+//                NavigationLink(destination: SelectPaceView()) {
+//                    Text("Pace")
+//                }
+//                
+//                NavigationLink(destination: SelectDurationView()) {
+//                    Text("Duration")
+//                }
+                StatRowComponent(metric: freeVM.metrics.heartRate)
+                StatRowComponent(metric: freeVM.metrics.stepCount)
             }
         }
     }

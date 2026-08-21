@@ -15,6 +15,8 @@ class WorkoutSessionManager: NSObject, WorkoutSessionManagerProtocol {
     var onSessionStateUpdate: ((HKWorkoutSessionState) -> Void)?
     var onAuthorizationUpdate: ((Bool) -> Void)?
     
+    private var currentMetrics = WorkoutMetrics()
+    
     private let healthStore = HKHealthStore()
     private var session: HKWorkoutSession?
     private var builder: HKLiveWorkoutBuilder?
@@ -109,7 +111,8 @@ class WorkoutSessionManager: NSObject, WorkoutSessionManagerProtocol {
     
     func resetWorkoutState() {
         stopTimer()
-        
+        currentMetrics = WorkoutMetrics()
+        onMetricsUpdate?(currentMetrics)
         session = nil
         builder = nil
     }
@@ -164,8 +167,6 @@ extension WorkoutSessionManager: HKWorkoutSessionDelegate {
 extension WorkoutSessionManager: HKLiveWorkoutBuilderDelegate {
     func workoutBuilder(_ workoutBuilder: HKLiveWorkoutBuilder, didCollectDataOf collectedTypes: Set<HKSampleType>) {
         
-        var metrics = WorkoutMetrics()
-        
         for type in collectedTypes {
             guard let quantityType = type as? HKQuantityType else { continue }
             
@@ -178,43 +179,45 @@ extension WorkoutSessionManager: HKLiveWorkoutBuilderDelegate {
                 // 1. Frequência Cardíaca (BPM - Mais recente)
                 case HKQuantityType.quantityType(forIdentifier: .heartRate):
                     let bpmUnit = HKUnit.count().unitDivided(by: .minute())
-                    let currentValue = statistics?.mostRecentQuantity()?.doubleValue(for: bpmUnit) ?? 0
-                    let averageValue = statistics?.averageQuantity()?.doubleValue(for: bpmUnit) ?? 0
-                    metrics.heartRate = currentValue
-                    metrics.averageHeartRate = averageValue
+                    let current = statistics?.mostRecentQuantity()?.doubleValue(for: bpmUnit) ?? 0
+                    let average = statistics?.averageQuantity()?.doubleValue(for: bpmUnit) ?? 0
+                    self?.currentMetrics.heartRate = .heartRate(bpm: Int(current))
+                    self?.currentMetrics.averageHeartRate = .averageHeartRate(bpm: Int(average))
                     
                 // 2. Calorias Ativas (kcal - Soma acumulada)
                 case HKQuantityType.quantityType(forIdentifier: .activeEnergyBurned):
                     let calorieUnit = HKUnit.kilocalorie()
                     let value = statistics?.sumQuantity()?.doubleValue(for: calorieUnit) ?? 0
-                    metrics.activeEnergyBurned = value
+                    self?.currentMetrics.activeEnergyBurned = .calories(value)
                     
                 // 3. Contagem de Passos (Passos - Soma acumulada)
                 case HKQuantityType.quantityType(forIdentifier: .stepCount):
                     let stepUnit = HKUnit.count()
                     let value = statistics?.sumQuantity()?.doubleValue(for: stepUnit) ?? 0
-                    metrics.stepCount = Int(value)
+                    self?.currentMetrics.stepCount = .stepCount(Int(value))
                     
                 // 4. Distância a Pé/Corrida (Metros - Soma acumulada)
                 case HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning):
                     let meterUnit = HKUnit.meter() // ou .meterUnit(with: .kilo) para km
                     let value = statistics?.sumQuantity()?.doubleValue(for: meterUnit) ?? 0
-                    metrics.distanceWalkingRunning = value
+                    self?.currentMetrics.distanceWalkingRunning = .distance(kilometers: value / 1000)
                     
                 // 5. Comprimento da Passada (Metros - Mais recente ou média)
                 case HKQuantityType.quantityType(forIdentifier: .runningStrideLength):
                     let meterUnit = HKUnit.meter()
                     let value = statistics?.mostRecentQuantity()?.doubleValue(for: meterUnit) ?? 0
-                    metrics.runningStrideLength = value
+                    self?.currentMetrics.runningStrideLength = .strideLength(meters: value)
                     
                 default:
                     break
                 }
             }
             
-            DispatchQueue.main.async {
-                self.onMetricsUpdate?(metrics)
-            }
+            
+        }
+        
+        DispatchQueue.main.async {
+            self.onMetricsUpdate?(self.currentMetrics)
         }
     }
     
