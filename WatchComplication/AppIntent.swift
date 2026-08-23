@@ -2,7 +2,7 @@
 //  AppIntent.swift
 //  WatchComplication
 //
-//  Created by Débora Cristina Silva Ferreira on 20/08/26.
+//  Created by Débora Cristina Silva Ferreira on 21/08/26.
 //
 
 import WidgetKit
