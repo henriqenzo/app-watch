@@ -21,18 +21,14 @@ class GuideRunViewModel: RunViewModelProtocol {
     var paceFeedback: PaceFeedback?
     var targetPace: Int?
     
-    private var workoutManager: any WorkoutSessionManagerProtocol
-    private let paceManager: any PaceManagerProtocol
+    private var workoutManager: WorkoutSessionManagerProtocol
+    private var paceManager: PaceManagerProtocol
     
-    init(
-        workoutManager: any WorkoutSessionManagerProtocol,
-        paceManager: any PaceManagerProtocol,
-        targetPace: Int?
-    ) {
+    init(workoutManager: WorkoutSessionManagerProtocol, paceManager: PaceManagerProtocol, targetPace: Int?) {
         self.workoutManager = workoutManager
         self.paceManager = paceManager
         self.targetPace = targetPace
-        paceManager.targetPace = targetPace
+        self.paceManager.targetPace = targetPace
         
         self.workoutManager.onMetricsUpdate = { [weak self] metrics in
             self?.metrics = metrics
@@ -49,7 +45,7 @@ class GuideRunViewModel: RunViewModelProtocol {
         self.workoutManager.onAuthorizationUpdate = { [weak self] isAuthorized in
             self?.isAuthorized = isAuthorized
         }
-
+        
         self.paceManager.onPaceUpdate = { [weak self] reading in
             self?.currentPace = reading.secondsPerKm
             self?.paceFeedback = reading.feedback
@@ -58,7 +54,7 @@ class GuideRunViewModel: RunViewModelProtocol {
 
     func startRunning() {
         workoutManager.requestAuthorization()
-
+        
         Task { [workoutManager] in
             await workoutManager.startSession()
         }

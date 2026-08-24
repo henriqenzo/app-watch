@@ -21,17 +21,14 @@ class FreeRunViewModel: RunViewModelProtocol {
     var paceFeedback: PaceFeedback?
     var targetPace: Int?
     
-    private var workoutSessionManager: any WorkoutSessionManagerProtocol
-    private let paceManager: any PaceManagerProtocol
+    private var workoutSessionManager: WorkoutSessionManagerProtocol
+    private var paceManager: PaceManagerProtocol
     
-    init(
-        workoutSessionManager: any WorkoutSessionManagerProtocol,
-        paceManager: any PaceManagerProtocol
-    ) {
+    init(workoutSessionManager: WorkoutSessionManagerProtocol, paceManager: PaceManagerProtocol) {
         self.workoutSessionManager = workoutSessionManager
         self.paceManager = paceManager
         // Modo livre não tem alvo: o chip de feedback nunca aparece.
-        paceManager.targetPace = nil
+        self.paceManager.targetPace = nil
         
         self.workoutSessionManager.onMetricsUpdate = { [weak self] metrics in
             self?.metrics = metrics
@@ -48,7 +45,7 @@ class FreeRunViewModel: RunViewModelProtocol {
         self.workoutSessionManager.onAuthorizationUpdate = { [weak self] isAuthorized in
             self?.isAuthorized = isAuthorized
         }
-
+        
         self.paceManager.onPaceUpdate = { [weak self] reading in
             self?.currentPace = reading.secondsPerKm
             self?.paceFeedback = reading.feedback
@@ -57,7 +54,7 @@ class FreeRunViewModel: RunViewModelProtocol {
 
     func startRunning() {
         workoutSessionManager.requestAuthorization()
-
+        
         Task { [workoutSessionManager] in
             await workoutSessionManager.startSession()
         }
