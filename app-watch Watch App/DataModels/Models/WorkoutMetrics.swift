@@ -14,4 +14,5 @@ struct WorkoutMetrics {
     var stepCount: Int = 0
     var distanceWalkingRunning: Double = 0
     var runningStrideLength: Double = 0
+    var runningSpeed: Double = 0
 }

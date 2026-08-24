@@ -1,5 +1,5 @@
 //
-//  GuideRunViewModel.swift
+//  FreeRunViewModel.swift
 //  app-watch Watch App
 //
 //  Created by Filipi Romão on 20/08/26.
@@ -17,11 +17,21 @@ class FreeRunViewModel: RunViewModelProtocol {
     var sessionState: HKWorkoutSessionState = .notStarted
     var isAuthorized = false
     var isRunning = true
+    var currentPace: Int?
+    var paceFeedback: PaceFeedback?
+    var targetPace: Int?
     
-    private var workoutSessionManager: WorkoutSessionManagerProtocol
+    private var workoutSessionManager: any WorkoutSessionManagerProtocol
+    private let paceManager: any PaceManagerProtocol
     
-    init(workoutSessionManager: WorkoutSessionManagerProtocol) {
+    init(
+        workoutSessionManager: any WorkoutSessionManagerProtocol,
+        paceManager: any PaceManagerProtocol
+    ) {
         self.workoutSessionManager = workoutSessionManager
+        self.paceManager = paceManager
+        // Modo livre não tem alvo: o chip de feedback nunca aparece.
+        paceManager.targetPace = nil
         
         self.workoutSessionManager.onMetricsUpdate = { [weak self] metrics in
             self?.metrics = metrics
@@ -37,6 +47,19 @@ class FreeRunViewModel: RunViewModelProtocol {
         
         self.workoutSessionManager.onAuthorizationUpdate = { [weak self] isAuthorized in
             self?.isAuthorized = isAuthorized
+        }
+
+        self.paceManager.onPaceUpdate = { [weak self] reading in
+            self?.currentPace = reading.secondsPerKm
+            self?.paceFeedback = reading.feedback
+        }
+    }
+
+    func startRunning() {
+        workoutSessionManager.requestAuthorization()
+
+        Task { [workoutSessionManager] in
+            await workoutSessionManager.startSession()
         }
     }
 
