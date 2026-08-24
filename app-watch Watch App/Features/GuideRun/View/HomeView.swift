@@ -13,7 +13,8 @@ struct HomeView: View {
     @State private var showWeatherCondition = false
     @State private var selectedTab = 0
     @State private var viewModel = WeatherConditionViewModel()
-    
+    @Environment(\.scenePhase) private var scenePhase
+
     var body: some View {
         NavigationStack {
             TabView(selection: $selectedTab) {
@@ -66,6 +67,11 @@ struct HomeView: View {
         }
         .task {
             viewModel.requestWeather()
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            if newPhase == .active {
+                viewModel.requestWeather()
+            }
         }
     }
 }

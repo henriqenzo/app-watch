@@ -7,8 +7,9 @@
 
 import Foundation
 import SwiftUI
+import WeatherKit
 
-enum WeatherCondition {
+enum WeatherCondition: Codable{
     case good
     case hot
     case extremeHeat
@@ -26,7 +27,7 @@ enum WeatherCondition {
         case .hot:
             "Corra com cuidado"
         case .extremeHeat:
-            "Evite correr"
+            "Muito quente"
         case .rain:
             "Chuva provável"
         case .storm:
@@ -49,7 +50,7 @@ enum WeatherCondition {
         case .hot:
             "Reduza o ritmo e hidrate-se"
         case .extremeHeat:
-            "O ideal é não correr"
+            "O ideal é não correr nessas condições"
         case .rain:
             "Pode chover durante a corrida"
         case .storm:
@@ -91,7 +92,7 @@ enum WeatherCondition {
     var color: Color {
         switch self {
         case .good:
-            Color("good")
+            Color("brandPrimaryColor")
         case .hot:
             Color("attention")
         case .extremeHeat:
@@ -110,4 +111,5 @@ enum WeatherCondition {
             Color("cold")
         }
     }
+    
 }

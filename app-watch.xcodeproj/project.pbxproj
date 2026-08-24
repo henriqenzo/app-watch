@@ -84,6 +84,9 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Features/WeatherCondition/WeatherCondition.swift,
+				Managers/WeatherConditionCalculator.swift,
+				Managers/WeatherManager.swift,
+				Shared/WeatherConditionShared.swift,
 				Utils/Assets.xcassets,
 			);
 			target = 4B9262C63038BC4D00230B59 /* WatchComplicationExtension */;
@@ -579,7 +582,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "br.com.deboraferreira.app-watch.watchkitapp.WatchComplication";
+				PRODUCT_BUNDLE_IDENTIFIER = "br.com.deboraferreira.app-watch.watchkitapp.weathercomplication";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -613,7 +616,7 @@
 					"@executable_path/../../../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "br.com.deboraferreira.app-watch.watchkitapp.WatchComplication";
+				PRODUCT_BUNDLE_IDENTIFIER = "br.com.deboraferreira.app-watch.watchkitapp.weathercomplication";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;

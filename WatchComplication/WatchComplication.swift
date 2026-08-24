@@ -7,65 +7,80 @@
 
 import WidgetKit
 import SwiftUI
+import WeatherKit
 
 struct Provider: AppIntentTimelineProvider {
+    private let weatherManager = WeatherManager()
+    private let calculator = WeatherConditionCalculator()
+    
     func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date())
+        SimpleEntry(date: Date(), condition: .good, temperature: 24)
     }
     
     func snapshot(for configuration: ConfigurationAppIntent, in context: Context) async -> SimpleEntry {
-        SimpleEntry(date: Date())
+        let snapshot = WeatherConditionShared.load()
+        return SimpleEntry(date: Date(), condition: snapshot?.condition ?? .good, temperature: snapshot?.temperature ?? 24)
     }
     
     func timeline(for configuration: ConfigurationAppIntent, in context: Context) async -> Timeline<SimpleEntry> {
-        var entries: [SimpleEntry] = []
+        var current = WeatherConditionShared.load()
         
-        // Generate a timeline consisting of five entries an hour apart, starting from the current date.
-        let currentDate = Date()
-        for hourOffset in 0 ..< 5 {
-            let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = SimpleEntry(date: entryDate)
-            entries.append(entry)
+        if current == nil || current!.isStale {
+            if let refreshed = await fetchUsingLastKnownLocation() {
+                current = refreshed
+            }
         }
         
-        return Timeline(entries: entries, policy: .atEnd)
+        let entry = SimpleEntry(date: Date(), condition: current?.condition ?? .good, temperature: current?.temperature ?? 24)
+        let nextUpdate = Calendar.current.date(byAdding: .minute, value: 30, to: Date())!
+        return Timeline(entries: [entry], policy: .after(nextUpdate))
     }
     
     func recommendations() -> [AppIntentRecommendation<ConfigurationAppIntent>] {
-        // Create an array with all the preconfigured widgets to show.
-        [AppIntentRecommendation(intent: ConfigurationAppIntent(), description: "Example Widget")]
+        [AppIntentRecommendation(intent: ConfigurationAppIntent(), description: "Clima pra corrida")]
     }
     
-    //    func relevances() async -> WidgetRelevances<ConfigurationAppIntent> {
-    //        // Generate a list containing the contexts this widget is relevant in.
-    //    }
+    private func fetchUsingLastKnownLocation() async -> WeatherConditionSnapshot? {
+        guard let lastLocation = WeatherConditionShared.loadLocation() else { return nil }
+        
+        do {
+            let weather = try await weatherManager.fetchCurrentWeather(
+                latitude: lastLocation.latitude,
+                longitude: lastLocation.longitude
+            )
+            let condition = calculator.evaluate(weather)
+            let temperature = Int(weather.temperature.converted(to: .celsius).value.rounded())
+            
+            let snapshot = WeatherConditionSnapshot(condition: condition, temperature: temperature, timestamp: Date())
+            WeatherConditionShared.save(snapshot)
+            return snapshot
+        } catch {
+            return nil
+        }
+    }
 }
 
 struct SimpleEntry: TimelineEntry {
     let date: Date
+    let condition: WeatherCondition
+    let temperature: Int
 }
 
-struct WatchComplicationEntryView : View {
+struct WatchComplicationEntryView: View {
     var entry: Provider.Entry
     
     var body: some View {
-        VStack {
-            HStack(spacing: 8) {
-                Image(systemName: WeatherCondition.hot.icon)
-                    .foregroundStyle(WeatherCondition.hot.color)
-                    .background(Circle().stroke(WeatherCondition.hot.color)
-                        .frame(width: 50))
-                Text(WeatherCondition.hot.title)
-                    .font(.system(size: 12))
-                    .foregroundStyle(WeatherCondition.hot.color)
-                    .fontWeight(.bold)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 10)
-            .background(
-                RoundedRectangle(cornerRadius: 16)
-                    .stroke(WeatherCondition.hot.color)
-            )
+        ZStack {
+            Circle()
+                .fill(entry.condition.color.opacity(0.2))
+                .stroke(entry.condition.color, lineWidth: 2)
+            
+            Image(systemName: entry.condition.icon)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .fontWeight(.bold)
+                .foregroundStyle(entry.condition.color)
+                .padding(10)
         }
         .widgetURL(URL(string: "myapp://weather"))
     }
@@ -80,16 +95,15 @@ struct WatchComplication: Widget {
                 .containerBackground(.fill.tertiary, for: .widget)
         }
         .supportedFamilies([
-            .accessoryRectangular,
-            
+            .accessoryCircular
         ])
     }
 }
 
-
-#Preview(as: .accessoryRectangular) {
+#Preview(as: .accessoryCircular) {
     WatchComplication()
 } timeline: {
-    SimpleEntry(date: .now)
-    SimpleEntry(date: .now)
+    SimpleEntry(date: .now, condition: .good, temperature: 24)
+    SimpleEntry(date: .now, condition: .extremeHeat, temperature: 35)
+    SimpleEntry(date: .now, condition: .storm, temperature: 22)
 }

@@ -26,8 +26,5 @@ struct WeatherConditionContainerView: View {
                 Text("Carregando condições de clima")
             }
         }
-        .task {
-            viewModel.requestWeather()
-        }
     }
 }
