@@ -14,6 +14,7 @@ class WorkoutSessionManager: NSObject, WorkoutSessionManagerProtocol {
     var onElapsedTimeUpdate: ((TimeInterval) -> Void)?
     var onSessionStateUpdate: ((HKWorkoutSessionState) -> Void)?
     var onAuthorizationUpdate: ((Bool) -> Void)?
+    var onSpeedUpdate: ((Double) -> Void)?
     
     private var currentMetrics = WorkoutMetrics()
     
@@ -36,7 +37,8 @@ class WorkoutSessionManager: NSObject, WorkoutSessionManagerProtocol {
             HKQuantityType.quantityType(forIdentifier: .activeEnergyBurned)!,
             HKQuantityType.quantityType(forIdentifier: .stepCount)!,
             HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning)!,
-            HKQuantityType.quantityType(forIdentifier: .runningStrideLength)!
+            HKQuantityType.quantityType(forIdentifier: .runningStrideLength)!,
+            HKQuantityType.quantityType(forIdentifier: .runningSpeed)!
         ]
         
         healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead) { [weak self] success, error in
@@ -167,6 +169,9 @@ extension WorkoutSessionManager: HKWorkoutSessionDelegate {
 extension WorkoutSessionManager: HKLiveWorkoutBuilderDelegate {
     func workoutBuilder(_ workoutBuilder: HKLiveWorkoutBuilder, didCollectDataOf collectedTypes: Set<HKSampleType>) {
         
+        let speedType = HKQuantityType.quantityType(forIdentifier: .runningSpeed)
+        let didCollectSpeed = collectedTypes.contains { ($0 as? HKQuantityType) == speedType }
+        
         for type in collectedTypes {
             guard let quantityType = type as? HKQuantityType else { continue }
             
@@ -208,6 +213,12 @@ extension WorkoutSessionManager: HKLiveWorkoutBuilderDelegate {
                     let value = statistics?.mostRecentQuantity()?.doubleValue(for: meterUnit) ?? 0
                     self?.currentMetrics.runningStrideLength = value
                     
+                // 6. Velocidade (m/s - Mais recente) - base do cálculo de pace
+                case HKQuantityType.quantityType(forIdentifier: .runningSpeed):
+                    let speedUnit = HKUnit.meter().unitDivided(by: .second())
+                    let value = statistics?.mostRecentQuantity()?.doubleValue(for: speedUnit) ?? 0
+                    self?.currentMetrics.runningSpeed = value
+                    
                 default:
                     break
                 }
@@ -218,6 +229,10 @@ extension WorkoutSessionManager: HKLiveWorkoutBuilderDelegate {
         
         DispatchQueue.main.async {
             self.onMetricsUpdate?(self.currentMetrics)
+            
+            if didCollectSpeed {
+                self.onSpeedUpdate?(self.currentMetrics.runningSpeed)
+            }
         }
     }
     

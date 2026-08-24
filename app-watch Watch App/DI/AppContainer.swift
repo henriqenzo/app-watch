@@ -11,18 +11,26 @@ final class AppContainer {
     
     static let shared = AppContainer()
     
+    /// Pace-alvo usado enquanto `SelectPaceView` não propaga a escolha do usuário.
+    /// 330 s/km = 5'30"/km.
+    static let defaultTargetPace = 330
+    
     let workoutSessionManager: WorkoutSessionManagerProtocol
+    let paceManager: PaceManagerProtocol
 
     init() {
-        workoutSessionManager = WorkoutSessionManager()
+        let workoutSessionManager = WorkoutSessionManager()
+        
+        self.workoutSessionManager = workoutSessionManager
+        self.paceManager = PaceManager(workoutSessionManager: workoutSessionManager)
+    }
+
+    func makeFreeRunViewModel() -> FreeRunViewModel {
+        return FreeRunViewModel(workoutSessionManager: workoutSessionManager, paceManager: paceManager)
     }
     
-    func makeFreeRunViewModel() -> RunViewModelProtocol {
-        return FreeRunViewModel(workoutSessionManager: workoutSessionManager)
-    }
-    
-    func makeGuideRunViewModel() -> RunViewModelProtocol {
-        return GuideRunViewModel(workoutManager: workoutSessionManager)
+    func makeGuideRunViewModel(targetPace: Int? = AppContainer.defaultTargetPace) -> GuideRunViewModel {
+        return GuideRunViewModel(workoutManager: workoutSessionManager, paceManager: paceManager, targetPace: targetPace)
     }
     
 }

@@ -11,13 +11,47 @@ import SwiftUI
 /// modos (livre e guiado) — o que muda entre eles são os dados recebidos.
 struct LiveRunView: View {
 
-    var heartRate: Int = 152
-    var cadence: Int = 170
-    var pace: String = "5'29\""
-    var paceFeedback: PaceFeedback? = .onTarget
-    var targetPace: String? = "5'30\""
-    var elapsedTime: String = "54:32"
-    var distance: String = "10,25"
+    @State private var viewModel: GuideRunViewModel
+
+    init(viewModel: GuideRunViewModel = AppContainer.shared.makeGuideRunViewModel()) {
+        _viewModel = State(initialValue: viewModel)
+    }
+
+    // MARK: - Dados formatados
+
+    private var heartRate: Int {
+        viewModel.metricsWorkout.heartRate
+    }
+
+    /// Aproximação a partir dos passos acumulados — o HealthKit ainda não
+    /// entrega cadência como métrica própria.
+    private var cadence: Int {
+        let duration = viewModel.metricsWorkout.duration
+        guard duration > 0 else { return 0 }
+        return Int(Double(viewModel.metricsWorkout.stepCount) / (duration / 60))
+    }
+
+    private var pace: String {
+        guard let currentPace = viewModel.currentPace else { return "--'--\"" }
+        return FormatMinutes.pace(currentPace)
+    }
+
+    private var paceFeedback: PaceFeedback? {
+        viewModel.paceFeedback
+    }
+
+    private var targetPace: String? {
+        viewModel.targetPace.map { FormatMinutes.pace($0) }
+    }
+
+    private var elapsedTime: String {
+        FormatMinutes.clock(Int(viewModel.metricsWorkout.duration))
+    }
+
+    private var distance: String {
+        String(format: "%.2f", viewModel.metricsWorkout.distanceWalkingRunning)
+            .replacingOccurrences(of: ".", with: ",")
+    }
 
     var body: some View {
         ZStack {
@@ -39,6 +73,9 @@ struct LiveRunView: View {
                     .padding(.top, AppSizes.medium)
             }
             .padding(.horizontal, AppSizes.small)
+        }
+        .task {
+            viewModel.startRunning()
         }
     }
 
@@ -163,45 +200,43 @@ struct LiveRunView: View {
     }
 }
 
-// MARK: - Feedback de pace
+// MARK: - Previews
 
-enum PaceFeedback {
-    case onTarget
-    case tooSlow
-    case tooFast
+/// Monta um ViewModel sobre velocidades sintéticas: o simulador do watchOS não
+/// gera amostras de `.runningSpeed`.
+private func previewViewModel(speeds: [Double], targetPace: Int?) -> GuideRunViewModel {
+    let sessionManager = MockWorkoutSessionManager(speeds: speeds)
+    let paceManager = PaceManager(workoutSessionManager: sessionManager)
 
-    var title: String {
-        switch self {
-        case .onTarget: "no pace"
-        case .tooSlow: "acelere"
-        case .tooFast: "desacelere"
-        }
+    paceManager.onFeedbackChange = { reading in
+        guard let feedback = reading.feedback, let delta = reading.deltaSecondsPerKm else { return }
+        print("[feedback] \(feedback.title) — \(FormatMinutes.paceDelta(delta))")
     }
 
-    var icon: String {
-        switch self {
-        case .onTarget: "checkmark"
-        case .tooSlow: "arrow.up"
-        case .tooFast: "arrow.down"
-        }
-    }
-
-    var color: Color {
-        switch self {
-        case .onTarget: .success
-        case .tooSlow, .tooFast: .alert
-        }
-    }
+    return GuideRunViewModel(
+        workoutManager: sessionManager,
+        paceManager: paceManager,
+        targetPace: targetPace
+    )
 }
 
-#Preview("Guiado · no pace") {
-    LiveRunView()
+/// 5'30"/km no alvo → 6'02"/km (+0'32") → parado.
+#Preview("Guiado · sai do pace") {
+    LiveRunView(
+        viewModel: previewViewModel(
+            speeds: Array(repeating: 3.03, count: 8)
+                + Array(repeating: 2.76, count: 12)
+                + Array(repeating: 0, count: 4),
+            targetPace: AppContainer.defaultTargetPace
+        )
+    )
 }
 
-#Preview("Guiado · acelere") {
-    LiveRunView(pace: "6'02\"", paceFeedback: .tooSlow)
-}
-
-#Preview("Livre") {
-    LiveRunView(paceFeedback: nil, targetPace: nil)
+#Preview("Livre · sem alvo") {
+    LiveRunView(
+        viewModel: previewViewModel(
+            speeds: Array(repeating: 3.03, count: 8),
+            targetPace: nil
+        )
+    )
 }

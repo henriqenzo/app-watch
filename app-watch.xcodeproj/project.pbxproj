@@ -341,11 +341,12 @@
 				CODE_SIGN_ENTITLEMENTS = "app-watch Watch App/app-watch Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = TWDCHYXP2J;
+				DEVELOPMENT_TEAM = 6F2KGULZ85;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "app-watch-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "app-watch";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Precisamos ler seus dados de treino para mostrar pace, frequencia cardiaca e distancia em tempo real.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Precisamos salvar os treinos realizados no Apple Health.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
@@ -377,11 +378,12 @@
 				CODE_SIGN_ENTITLEMENTS = "app-watch Watch App/app-watch Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = TWDCHYXP2J;
+				DEVELOPMENT_TEAM = 6F2KGULZ85;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "app-watch-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "app-watch";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Precisamos ler seus dados de treino para mostrar pace, frequencia cardiaca e distancia em tempo real.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Precisamos salvar os treinos realizados no Apple Health.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
@@ -411,7 +413,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = TWDCHYXP2J;
+				DEVELOPMENT_TEAM = 6F2KGULZ85;
 				INFOPLIST_KEY_CFBundleDisplayName = "app-watch";
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "br.com.henriqenzo.app-watch";
@@ -428,7 +430,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = TWDCHYXP2J;
+				DEVELOPMENT_TEAM = 6F2KGULZ85;
 				INFOPLIST_KEY_CFBundleDisplayName = "app-watch";
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "br.com.henriqenzo.app-watch";
