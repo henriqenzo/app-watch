@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @State var freeVM = AppContainer.shared.makeFreeRunViewModel()
+    
     var body: some View {
         NavigationStack {
             VStack {
@@ -22,6 +25,7 @@ struct ContentView: View {
                 NavigationLink(destination: SelectDurationView()) {
                     Text("Duration")
                 }
+             
             }
         }
     }

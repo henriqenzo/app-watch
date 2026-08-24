@@ -11,9 +11,7 @@ import HealthKit
 
 @Observable
 class FreeRunViewModel: RunViewModelProtocol {
-    
-    var metrics = WorkoutMetrics()
-    var elapsedTime: TimeInterval = 0
+    var metricsWorkout = WorkoutMetrics()
     var sessionState: HKWorkoutSessionState = .notStarted
     var isAuthorized = false
     var isRunning = true
@@ -31,11 +29,11 @@ class FreeRunViewModel: RunViewModelProtocol {
         self.paceManager.targetPace = nil
         
         self.workoutSessionManager.onMetricsUpdate = { [weak self] metrics in
-            self?.metrics = metrics
+            self?.metricsWorkout = metrics
         }
         
         self.workoutSessionManager.onElapsedTimeUpdate = { [weak self] elapsedTime in
-            self?.elapsedTime = elapsedTime
+            self?.metricsWorkout.duration = elapsedTime
         }
         
         self.workoutSessionManager.onSessionStateUpdate = { [weak self] sessionState in

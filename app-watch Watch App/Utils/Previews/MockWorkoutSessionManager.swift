@@ -48,11 +48,14 @@ final class MockWorkoutSessionManager: WorkoutSessionManagerProtocol {
                 elapsed += 1
                 metrics.heartRate = 158
                 metrics.runningSpeed = speed
-                metrics.distanceWalkingRunning += speed
+                // `distanceWalkingRunning` e publicada em km pelo manager real.
+                metrics.distanceWalkingRunning += speed / 1000
                 metrics.stepCount += 3
 
-                onElapsedTimeUpdate?(elapsed)
+                // `onMetricsUpdate` substitui a struct inteira e zera `duration`,
+                // por isso o tempo e emitido depois.
                 onMetricsUpdate?(metrics)
+                onElapsedTimeUpdate?(elapsed)
                 onSpeedUpdate?(speed)
 
                 try? await Task.sleep(for: .seconds(1))

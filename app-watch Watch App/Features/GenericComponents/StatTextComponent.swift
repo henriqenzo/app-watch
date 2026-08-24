@@ -24,6 +24,6 @@ struct StatTextComponent: View {
 
 #Preview {
     StatTextComponent(
-        metric: .duration(seconds: 3000)
+        metric: .duration(interval: 3000)
     )
 }

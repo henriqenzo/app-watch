@@ -16,10 +16,8 @@ class WorkoutSessionManager: NSObject, WorkoutSessionManagerProtocol {
     var onAuthorizationUpdate: ((Bool) -> Void)?
     var onSpeedUpdate: ((Double) -> Void)?
     
-    /// Acumula as métricas entre callbacks: o HealthKit entrega apenas os tipos
-    /// que mudaram, então recriar a struct a cada evento zeraria os demais campos.
-    private var metrics = WorkoutMetrics()
-
+    private var currentMetrics = WorkoutMetrics()
+    
     private let healthStore = HKHealthStore()
     private var session: HKWorkoutSession?
     private var builder: HKLiveWorkoutBuilder?
@@ -115,8 +113,8 @@ class WorkoutSessionManager: NSObject, WorkoutSessionManagerProtocol {
     
     func resetWorkoutState() {
         stopTimer()
-        
-        metrics = WorkoutMetrics()
+        currentMetrics = WorkoutMetrics()
+        onMetricsUpdate?(currentMetrics)
         session = nil
         builder = nil
     }
@@ -170,69 +168,70 @@ extension WorkoutSessionManager: HKWorkoutSessionDelegate {
 
 extension WorkoutSessionManager: HKLiveWorkoutBuilderDelegate {
     func workoutBuilder(_ workoutBuilder: HKLiveWorkoutBuilder, didCollectDataOf collectedTypes: Set<HKSampleType>) {
-
-        // Um único hop para a main: preencher `metrics` e emitir precisam acontecer
-        // no mesmo bloco, senão a emissão captura a struct antes do preenchimento.
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-
-            var speedDidUpdate = false
-
-            for type in collectedTypes {
-                guard let quantityType = type as? HKQuantityType else { continue }
-
-                let statistics = workoutBuilder.statistics(for: quantityType)
-
+        
+        let speedType = HKQuantityType.quantityType(forIdentifier: .runningSpeed)
+        let didCollectSpeed = collectedTypes.contains { ($0 as? HKQuantityType) == speedType }
+        
+        for type in collectedTypes {
+            guard let quantityType = type as? HKQuantityType else { continue }
+            
+            let statistics = workoutBuilder.statistics(for: quantityType)
+            
+            DispatchQueue.main.async { [weak self] in
+                guard self != nil else { return }
+                
                 switch quantityType {
                 // 1. Frequência Cardíaca (BPM - Mais recente)
                 case HKQuantityType.quantityType(forIdentifier: .heartRate):
                     let bpmUnit = HKUnit.count().unitDivided(by: .minute())
-                    let currentValue = statistics?.mostRecentQuantity()?.doubleValue(for: bpmUnit) ?? 0
-                    let averageValue = statistics?.averageQuantity()?.doubleValue(for: bpmUnit) ?? 0
-                    self.metrics.heartRate = currentValue
-                    self.metrics.averageHeartRate = averageValue
-
+                    let current = statistics?.mostRecentQuantity()?.doubleValue(for: bpmUnit) ?? 0
+                    let average = statistics?.averageQuantity()?.doubleValue(for: bpmUnit) ?? 0
+                    self?.currentMetrics.heartRate = Int(current)
+                    self?.currentMetrics.averageHeartRate = Int(average)
+                    
                 // 2. Calorias Ativas (kcal - Soma acumulada)
                 case HKQuantityType.quantityType(forIdentifier: .activeEnergyBurned):
                     let calorieUnit = HKUnit.kilocalorie()
                     let value = statistics?.sumQuantity()?.doubleValue(for: calorieUnit) ?? 0
-                    self.metrics.activeEnergyBurned = value
-
+                    self?.currentMetrics.activeEnergyBurned = value
+                    
                 // 3. Contagem de Passos (Passos - Soma acumulada)
                 case HKQuantityType.quantityType(forIdentifier: .stepCount):
                     let stepUnit = HKUnit.count()
                     let value = statistics?.sumQuantity()?.doubleValue(for: stepUnit) ?? 0
-                    self.metrics.stepCount = Int(value)
-
+                    self?.currentMetrics.stepCount = Int(value)
+                    
                 // 4. Distância a Pé/Corrida (Metros - Soma acumulada)
                 case HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning):
                     let meterUnit = HKUnit.meter() // ou .meterUnit(with: .kilo) para km
                     let value = statistics?.sumQuantity()?.doubleValue(for: meterUnit) ?? 0
-                    self.metrics.distanceWalkingRunning = value
-
+                    self?.currentMetrics.distanceWalkingRunning = value / 1000
+                    
                 // 5. Comprimento da Passada (Metros - Mais recente ou média)
                 case HKQuantityType.quantityType(forIdentifier: .runningStrideLength):
                     let meterUnit = HKUnit.meter()
                     let value = statistics?.mostRecentQuantity()?.doubleValue(for: meterUnit) ?? 0
-                    self.metrics.runningStrideLength = value
-
+                    self?.currentMetrics.runningStrideLength = value
+                    
                 // 6. Velocidade (m/s - Mais recente) - base do cálculo de pace
                 case HKQuantityType.quantityType(forIdentifier: .runningSpeed):
                     let speedUnit = HKUnit.meter().unitDivided(by: .second())
                     let value = statistics?.mostRecentQuantity()?.doubleValue(for: speedUnit) ?? 0
-                    self.metrics.runningSpeed = value
-                    speedDidUpdate = true
-
+                    self?.currentMetrics.runningSpeed = value
+                    
                 default:
                     break
                 }
             }
-
-            // Uma emissão por evento, e não uma por tipo coletado.
-            self.onMetricsUpdate?(self.metrics)
-
-            if speedDidUpdate {
-                self.onSpeedUpdate?(self.metrics.runningSpeed)
+            
+            
+        }
+        
+        DispatchQueue.main.async {
+            self.onMetricsUpdate?(self.currentMetrics)
+            
+            if didCollectSpeed {
+                self.onSpeedUpdate?(self.currentMetrics.runningSpeed)
             }
         }
     }

@@ -9,8 +9,7 @@ import Foundation
 import HealthKit
 
 protocol RunViewModelProtocol: ObservableObject {
-    var metrics: WorkoutMetrics { get }
-    var elapsedTime: TimeInterval { get }
+    var metricsWorkout: WorkoutMetrics { get }
     var sessionState: HKWorkoutSessionState { get }
     var isAuthorized: Bool { get }
     var isRunning: Bool { get }

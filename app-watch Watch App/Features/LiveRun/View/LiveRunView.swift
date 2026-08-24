@@ -20,14 +20,15 @@ struct LiveRunView: View {
     // MARK: - Dados formatados
 
     private var heartRate: Int {
-        Int(viewModel.metrics.heartRate)
+        viewModel.metricsWorkout.heartRate
     }
 
     /// Aproximação a partir dos passos acumulados — o HealthKit ainda não
     /// entrega cadência como métrica própria.
     private var cadence: Int {
-        guard viewModel.elapsedTime > 0 else { return 0 }
-        return Int(Double(viewModel.metrics.stepCount) / (viewModel.elapsedTime / 60))
+        let duration = viewModel.metricsWorkout.duration
+        guard duration > 0 else { return 0 }
+        return Int(Double(viewModel.metricsWorkout.stepCount) / (duration / 60))
     }
 
     private var pace: String {
@@ -44,12 +45,11 @@ struct LiveRunView: View {
     }
 
     private var elapsedTime: String {
-        FormatMinutes.clock(Int(viewModel.elapsedTime))
+        FormatMinutes.clock(Int(viewModel.metricsWorkout.duration))
     }
 
     private var distance: String {
-        let kilometers = viewModel.metrics.distanceWalkingRunning / 1000
-        return String(format: "%.2f", kilometers)
+        String(format: "%.2f", viewModel.metricsWorkout.distanceWalkingRunning)
             .replacingOccurrences(of: ".", with: ",")
     }
 
