@@ -18,13 +18,21 @@ class FreeRunViewModel: RunViewModelProtocol {
     var currentPace: Int?
     var paceFeedback: PaceFeedback?
     var targetPace: Int?
+    var isMetronomeRunning: Bool = false
+    var metronomePPM: Double = 160
     
     private var workoutSessionManager: WorkoutSessionManagerProtocol
     private var paceManager: PaceManagerProtocol
+    private var metronomeManager: MetronomeManagerProtocol
     
-    init(workoutSessionManager: WorkoutSessionManagerProtocol, paceManager: PaceManagerProtocol) {
+    init(
+        workoutSessionManager: WorkoutSessionManagerProtocol,
+        paceManager: PaceManagerProtocol,
+        metronomeManager: MetronomeManagerProtocol
+    ) {
         self.workoutSessionManager = workoutSessionManager
         self.paceManager = paceManager
+        self.metronomeManager = metronomeManager
         // Modo livre não tem alvo: o chip de feedback nunca aparece.
         self.paceManager.targetPace = nil
         
@@ -47,6 +55,14 @@ class FreeRunViewModel: RunViewModelProtocol {
         self.paceManager.onPaceUpdate = { [weak self] reading in
             self?.currentPace = reading.secondsPerKm
             self?.paceFeedback = reading.feedback
+        }
+        
+        self.metronomeManager.onPPMUpdate = { [weak self] ppm in
+            self?.metronomePPM = ppm
+        }
+        
+        self.metronomeManager.onRunningStateUpdate = { [weak self] isRunning in
+            self?.isMetronomeRunning = isRunning
         }
     }
 
@@ -72,6 +88,18 @@ class FreeRunViewModel: RunViewModelProtocol {
 
     func editRunning() {
         print("Vai editar")
+    }
+    
+    func toggleMetronome() {
+        metronomeManager.toggle()
+    }
+    
+    func incrementMetronome() {
+        metronomeManager.increment(by: 1)
+    }
+    
+    func decrementMetronome() {
+        metronomeManager.decrement(by: 1)
     }
 
 }
