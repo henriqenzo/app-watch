@@ -8,14 +8,26 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @State var freeVM = AppContainer.shared.makeFreeRunViewModel()
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationStack {
+            VStack {
+                NavigationLink(destination: SelectDistanceView()) {
+                    Text("Distance")
+                }
+                
+                NavigationLink(destination: SelectPaceView()) {
+                    Text("Pace")
+                }
+                
+                NavigationLink(destination: SelectDurationView()) {
+                    Text("Duration")
+                }
+             
+            }
         }
-        .padding()
     }
 }
 

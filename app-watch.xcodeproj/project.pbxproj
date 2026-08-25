@@ -69,7 +69,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Features/GuideRun/View/GuideRunView.swift,
-				Features/GuideRun/ViewModel/GuideRunViewModel.swift,
 			);
 			target = 2ACCAFEE3034D146005B8706 /* app-watch Watch App */;
 		};
@@ -99,7 +98,6 @@
 			buildPhase = 2ACCAFED3034D146005B8706 /* Resources */;
 			membershipExceptions = (
 				Features/GuideRun/View/GuideRunView.swift,
-				Features/GuideRun/ViewModel/GuideRunViewModel.swift,
 			);
 		};
 /* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
@@ -464,7 +462,7 @@
 				CODE_SIGN_ENTITLEMENTS = "app-watch Watch App/app-watch Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = MB73MN45Q2;
+				DEVELOPMENT_TEAM = TWDCHYXP2J;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "app-watch";
@@ -499,7 +497,7 @@
 				CODE_SIGN_ENTITLEMENTS = "app-watch Watch App/app-watch Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = MB73MN45Q2;
+				DEVELOPMENT_TEAM = TWDCHYXP2J;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "app-watch";
@@ -534,6 +532,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = MB73MN45Q2;
 				INFOPLIST_KEY_CFBundleDisplayName = "app-watch";
+				IPHONEOS_DEPLOYMENT_TARGET = 13;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "br.com.deboraferreira.app-watch";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -551,6 +550,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = MB73MN45Q2;
 				INFOPLIST_KEY_CFBundleDisplayName = "app-watch";
+				IPHONEOS_DEPLOYMENT_TARGET = 13;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "br.com.deboraferreira.app-watch";
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -10,17 +10,21 @@ import SwiftUI
 enum ButtonVariant {
     case primary
     case secondary
+    case terciary
 
     var background: Color {
         switch self {
         case .primary: return Color.brandPrimary
         case .secondary: return Color.backgroundLight
+        case .terciary: return
+            Color.brandSecondary
         }
     }
     var foreground: Color {
         switch self {
         case .primary: return Color.textDark
         case .secondary: return Color.textPrimary
+        case .terciary: return Color.textDark
         }
     }
 
@@ -41,7 +45,7 @@ struct PrimaryButtonComponent: View {
                     .font(AppTypography.subheadlineSemibold)
             }
         )
-        .frame(height: 42)
+        .frame(height: 38)
         .background(variantStyle.background)
         .cornerRadius(AppRadius.buttonRadius)
         .buttonStyle(.plain)

@@ -12,7 +12,7 @@ struct SummaryView: View {
         .pace(secondsPerKm: 332),
         .calories(615),
         .distance(kilometers: 5.42),
-        .duration(seconds: 1802)
+        .duration(interval: TimeInterval())
     ]
    
  

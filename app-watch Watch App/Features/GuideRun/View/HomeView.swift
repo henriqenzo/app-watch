@@ -14,37 +14,44 @@ struct HomeView: View {
     @State private var selectedTab = 0
     @State private var viewModel = WeatherConditionViewModel()
     @Environment(\.scenePhase) private var scenePhase
-
+    
     var body: some View {
         NavigationStack {
             TabView(selection: $selectedTab) {
-                VStack(spacing: 12) {
-                    VStack(spacing: 8) {
+                VStack(spacing: AppSizes.xmedium) {
+                    VStack(spacing: AppSizes.medium) {
                         Image(systemName: "figure.run")
                             .font(.title2)
                             .background(
-                                Circle()
+                                    Circle()
                                     .fill(Color.brandPrimary.opacity(0.4))
-                                    .frame(width: 50, height: 50))
+                                    .frame(width: 50, height: 50)
+                            )
+                        
                         Text("Vamos correr?")
                             .font(.headline)
                             .fontWeight(.bold)
+                        
                     }
                     
-                    VStack(spacing: 8) {
+                    VStack(spacing: AppSizes.medium) {
                         PrimaryButtonComponent(
                             label: "Iniciar treino guiado",
                             variantStyle: .primary
                         ) {
                             showGoalView = true
+                            
                         }
                         
                         PrimaryButtonComponent(
                             label: "Iniciar treino livre",
                             variantStyle: .secondary
+                            
                         ) {
                             
+                            
                         }
+                        
                     }
                     .padding(.horizontal)
                 }
@@ -52,6 +59,7 @@ struct HomeView: View {
                 
                 WeatherConditionContainerView(viewModel: viewModel)
                     .tag(1)
+                
             }
             .tabViewStyle(.page)
             .navigationDestination(isPresented: $showGoalView) {
