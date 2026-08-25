@@ -9,9 +9,13 @@ import SwiftUI
 
 @main
 struct app_watch_Watch_AppApp: App {
+    
+    @State private var container = AppContainer()
+    
     var body: some Scene {
         WindowGroup {
             HomeView()
+                .environment(container)
         }
     }
 }

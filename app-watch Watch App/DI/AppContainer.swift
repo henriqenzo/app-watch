@@ -7,12 +7,9 @@
 
 import Foundation
 
+@Observable
 final class AppContainer {
     
-    static let shared = AppContainer()
-    
-    /// Pace-alvo usado enquanto `SelectPaceView` não propaga a escolha do usuário.
-    /// 330 s/km = 5'30"/km.
     static let defaultTargetPace = 330
     
     let workoutSessionManager: WorkoutSessionManagerProtocol
@@ -31,7 +28,8 @@ final class AppContainer {
         return FreeRunViewModel(
             workoutSessionManager: workoutSessionManager,
             paceManager: paceManager,
-            metronomeManager: metronomeManager
+            metronomeManager: metronomeManager,
+            hapticManager: hapticManager
         )
     }
     
@@ -40,8 +38,12 @@ final class AppContainer {
             workoutManager: workoutSessionManager,
             paceManager: paceManager,
             targetPace: targetPace,
-            metronomeManager: metronomeManager
+            metronomeManager: metronomeManager,
+            hapticManager: hapticManager
         )
     }
     
+    func makeSettingsViewModel() -> SettingsViewModel {
+        return SettingsViewModel()
+    }
 }

@@ -9,4 +9,5 @@ import Foundation
 
 protocol HapticManagerProtocol {
     func playBeat() -> Void
+    func playWarning() -> Void
 }

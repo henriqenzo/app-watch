@@ -9,7 +9,11 @@ import Foundation
 import SwiftUI
 
 struct HomeView: View {
+    
+    @Environment(AppContainer.self) private var container
+    
     @State private var showGoalView = false
+    @State private var showSettingsView = false
     
     var body: some View {
         NavigationStack {
@@ -44,13 +48,33 @@ struct HomeView: View {
                 .padding(.horizontal)
                 
             }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showSettingsView = true
+                    } label: {
+                        Image(systemName: "gearshape.fill")
+                    }
+                }
+            }
             .navigationDestination(isPresented: $showGoalView) {
                 GoalView()
+            }
+            .sheet(isPresented: $showSettingsView) {
+                SettingsView(settingsViewModel: container.makeSettingsViewModel()) 
             }
         }
     }
 }
 
 #Preview {
-    HomeView()
+    struct PreviewWrapper: View {
+        @State private var container = AppContainer()
+
+        var body: some View {
+            HomeView()
+                .environment(container)
+        }
+    }
+    return PreviewWrapper()
 }
