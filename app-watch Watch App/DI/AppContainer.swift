@@ -17,6 +17,7 @@ final class AppContainer {
     
     let workoutSessionManager: WorkoutSessionManagerProtocol
     let paceManager: PaceManagerProtocol
+    let strideManager: StrideManagerProtocol
     let hapticManager: HapticManagerProtocol
     let metronomeManager: MetronomeManagerProtocol
 
@@ -25,22 +26,29 @@ final class AppContainer {
         self.paceManager = PaceManager(workoutSessionManager: workoutSessionManager)
         self.hapticManager = HapticManager()
         self.metronomeManager = MetronomeManager(hapticManager: hapticManager)
+        self.strideManager = StrideManager(
+            paceManager: paceManager,
+            workoutSessionManager: workoutSessionManager,
+            metronomeManager: metronomeManager
+        )
     }
 
     func makeFreeRunViewModel() -> FreeRunViewModel {
         return FreeRunViewModel(
             workoutSessionManager: workoutSessionManager,
             paceManager: paceManager,
-            metronomeManager: metronomeManager
+            metronomeManager: metronomeManager,
+            strideManager: strideManager
         )
     }
-    
+
     func makeGuideRunViewModel(targetPace: Int? = AppContainer.defaultTargetPace) -> GuideRunViewModel {
         return GuideRunViewModel(
             workoutManager: workoutSessionManager,
             paceManager: paceManager,
             targetPace: targetPace,
-            metronomeManager: metronomeManager
+            metronomeManager: metronomeManager,
+            strideManager: strideManager
         )
     }
     

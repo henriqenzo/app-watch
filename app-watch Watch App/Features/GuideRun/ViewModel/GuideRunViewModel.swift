@@ -20,21 +20,25 @@ class GuideRunViewModel: RunViewModelProtocol {
     var targetPace: Int?
     var isMetronomeRunning: Bool = false
     var metronomePPM: Double = 160
-    
+    var targetCadence: Int?
+
     private var workoutManager: WorkoutSessionManagerProtocol
     private var paceManager: PaceManagerProtocol
     private var metronomeManager: MetronomeManagerProtocol
-    
+    private var strideManager: StrideManagerProtocol
+
     init(
         workoutManager: WorkoutSessionManagerProtocol,
         paceManager: PaceManagerProtocol,
         targetPace: Int?,
-        metronomeManager: MetronomeManagerProtocol
+        metronomeManager: MetronomeManagerProtocol,
+        strideManager: StrideManagerProtocol
     ) {
         self.workoutManager = workoutManager
         self.paceManager = paceManager
         self.targetPace = targetPace
         self.metronomeManager = metronomeManager
+        self.strideManager = strideManager
         self.paceManager.targetPace = targetPace
         
         self.workoutManager.onMetricsUpdate = { [weak self] metrics in
@@ -64,6 +68,10 @@ class GuideRunViewModel: RunViewModelProtocol {
         
         self.metronomeManager.onRunningStateUpdate = { [weak self] isRunning in
             self?.isMetronomeRunning = isRunning
+        }
+
+        self.strideManager.onCadenceUpdate = { [weak self] reading in
+            self?.targetCadence = reading.targetCadence
         }
     }
 

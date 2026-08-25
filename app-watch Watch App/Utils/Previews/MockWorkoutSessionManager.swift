@@ -18,6 +18,10 @@ final class MockWorkoutSessionManager: WorkoutSessionManagerProtocol {
     var onSessionStateUpdate: ((HKWorkoutSessionState) -> Void)?
     var onAuthorizationUpdate: ((Bool) -> Void)?
     var onSpeedUpdate: ((Double) -> Void)?
+    var onStrideUpdate: ((Double) -> Void)?
+
+    /// Passada sintética fixa, em metros, para exercitar o `StrideManager`.
+    private let strideLength: Double = 1.0
 
     /// Velocidades em m/s, emitidas uma por segundo e repetidas em ciclo.
     private let speeds: [Double]
@@ -48,6 +52,7 @@ final class MockWorkoutSessionManager: WorkoutSessionManagerProtocol {
                 elapsed += 1
                 metrics.heartRate = 158
                 metrics.runningSpeed = speed
+                metrics.runningStrideLength = strideLength
                 // `distanceWalkingRunning` e publicada em km pelo manager real.
                 metrics.distanceWalkingRunning += speed / 1000
                 metrics.stepCount += 3
@@ -57,6 +62,7 @@ final class MockWorkoutSessionManager: WorkoutSessionManagerProtocol {
                 onMetricsUpdate?(metrics)
                 onElapsedTimeUpdate?(elapsed)
                 onSpeedUpdate?(speed)
+                onStrideUpdate?(strideLength)
 
                 try? await Task.sleep(for: .seconds(1))
             }

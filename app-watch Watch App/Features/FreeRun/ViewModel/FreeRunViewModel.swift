@@ -20,19 +20,23 @@ class FreeRunViewModel: RunViewModelProtocol {
     var targetPace: Int?
     var isMetronomeRunning: Bool = false
     var metronomePPM: Double = 160
-    
+    var targetCadence: Int?
+
     private var workoutSessionManager: WorkoutSessionManagerProtocol
     private var paceManager: PaceManagerProtocol
     private var metronomeManager: MetronomeManagerProtocol
-    
+    private var strideManager: StrideManagerProtocol
+
     init(
         workoutSessionManager: WorkoutSessionManagerProtocol,
         paceManager: PaceManagerProtocol,
-        metronomeManager: MetronomeManagerProtocol
+        metronomeManager: MetronomeManagerProtocol,
+        strideManager: StrideManagerProtocol
     ) {
         self.workoutSessionManager = workoutSessionManager
         self.paceManager = paceManager
         self.metronomeManager = metronomeManager
+        self.strideManager = strideManager
         // Modo livre não tem alvo: o chip de feedback nunca aparece.
         self.paceManager.targetPace = nil
         
@@ -63,6 +67,10 @@ class FreeRunViewModel: RunViewModelProtocol {
         
         self.metronomeManager.onRunningStateUpdate = { [weak self] isRunning in
             self?.isMetronomeRunning = isRunning
+        }
+
+        self.strideManager.onCadenceUpdate = { [weak self] reading in
+            self?.targetCadence = reading.targetCadence
         }
     }
 

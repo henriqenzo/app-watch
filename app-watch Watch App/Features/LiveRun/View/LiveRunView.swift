@@ -208,6 +208,11 @@ private func previewViewModel(speeds: [Double], targetPace: Int?) -> GuideRunVie
     let sessionManager = MockWorkoutSessionManager(speeds: speeds)
     let paceManager = PaceManager(workoutSessionManager: sessionManager)
     let metronomeManager = MetronomeManager(hapticManager: HapticManager())
+    let strideManager = StrideManager(
+        paceManager: paceManager,
+        workoutSessionManager: sessionManager,
+        metronomeManager: metronomeManager
+    )
 
     paceManager.onFeedbackChange = { reading in
         guard let feedback = reading.feedback, let delta = reading.deltaSecondsPerKm else { return }
@@ -218,7 +223,8 @@ private func previewViewModel(speeds: [Double], targetPace: Int?) -> GuideRunVie
         workoutManager: sessionManager,
         paceManager: paceManager,
         targetPace: targetPace,
-        metronomeManager: metronomeManager
+        metronomeManager: metronomeManager,
+        strideManager: strideManager
     )
 }
 
