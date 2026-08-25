@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-protocol RunViewModelProtocol: ObservableObject {
+protocol RunViewModelProtocol: AnyObject {
     var metricsWorkout: WorkoutMetrics { get }
     var sessionState: HKWorkoutSessionState { get }
     var isAuthorized: Bool { get }
@@ -18,9 +18,16 @@ protocol RunViewModelProtocol: ObservableObject {
     /// `nil` no modo livre, onde não há alvo para comparar.
     var paceFeedback: PaceFeedback? { get }
     var targetPace: Int? { get }
+    
+    var isMetronomeRunning: Bool { get }
+    var metronomePPM: Double { get }
 
     func startRunning()
     func pauseResumeRunning()
     func stopRunning()
     func editRunning()
+    
+    func toggleMetronome()
+    func incrementMetronome()
+    func decrementMetronome()
 }
