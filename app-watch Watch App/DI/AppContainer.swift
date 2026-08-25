@@ -28,11 +28,20 @@ final class AppContainer {
     }
 
     func makeFreeRunViewModel() -> FreeRunViewModel {
-        return FreeRunViewModel(workoutSessionManager: workoutSessionManager, paceManager: paceManager, metronomeManager: metronomeManager)
+        return FreeRunViewModel(
+            workoutSessionManager: workoutSessionManager,
+            paceManager: paceManager,
+            metronomeManager: metronomeManager
+        )
     }
     
     func makeGuideRunViewModel(targetPace: Int? = AppContainer.defaultTargetPace) -> GuideRunViewModel {
-        return GuideRunViewModel(workoutManager: workoutSessionManager, paceManager: paceManager, targetPace: targetPace)
+        return GuideRunViewModel(
+            workoutManager: workoutSessionManager,
+            paceManager: paceManager,
+            targetPace: targetPace,
+            metronomeManager: metronomeManager
+        )
     }
     
 }

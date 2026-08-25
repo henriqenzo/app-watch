@@ -18,14 +18,23 @@ class GuideRunViewModel: RunViewModelProtocol {
     var currentPace: Int?
     var paceFeedback: PaceFeedback?
     var targetPace: Int?
+    var isMetronomeRunning: Bool = false
+    var metronomePPM: Double = 160
     
     private var workoutManager: WorkoutSessionManagerProtocol
     private var paceManager: PaceManagerProtocol
+    private var metronomeManager: MetronomeManagerProtocol
     
-    init(workoutManager: WorkoutSessionManagerProtocol, paceManager: PaceManagerProtocol, targetPace: Int?) {
+    init(
+        workoutManager: WorkoutSessionManagerProtocol,
+        paceManager: PaceManagerProtocol,
+        targetPace: Int?,
+        metronomeManager: MetronomeManagerProtocol
+    ) {
         self.workoutManager = workoutManager
         self.paceManager = paceManager
         self.targetPace = targetPace
+        self.metronomeManager = metronomeManager
         self.paceManager.targetPace = targetPace
         
         self.workoutManager.onMetricsUpdate = { [weak self] metrics in
@@ -47,6 +56,14 @@ class GuideRunViewModel: RunViewModelProtocol {
         self.paceManager.onPaceUpdate = { [weak self] reading in
             self?.currentPace = reading.secondsPerKm
             self?.paceFeedback = reading.feedback
+        }
+        
+        self.metronomeManager.onPPMUpdate = { [weak self] ppm in
+            self?.metronomePPM = ppm
+        }
+        
+        self.metronomeManager.onRunningStateUpdate = { [weak self] isRunning in
+            self?.isMetronomeRunning = isRunning
         }
     }
 
@@ -72,6 +89,18 @@ class GuideRunViewModel: RunViewModelProtocol {
     
     func editRunning() {
         print("Vai editar")
+    }
+    
+    func toggleMetronome() {
+        metronomeManager.toggle()
+    }
+    
+    func incrementMetronome() {
+        metronomeManager.increment(by: 1)
+    }
+    
+    func decrementMetronome() {
+        metronomeManager.decrement(by: 1)
     }
 
 }
