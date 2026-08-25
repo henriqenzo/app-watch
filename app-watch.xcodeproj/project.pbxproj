@@ -39,33 +39,9 @@
 		2ACCAFEF3034D146005B8706 /* app-watch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "app-watch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		4B9261373036294100230B59 /* Exceptions for "app-watch Watch App" folder in "app-watch Watch App" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Features/GuideRun/View/GuideRunView.swift,
-			);
-			target = 2ACCAFEE3034D146005B8706 /* app-watch Watch App */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
-/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-		4B9261383036294100230B59 /* Exceptions for "app-watch Watch App" folder in "Copy Bundle Resources" phase from "app-watch Watch App" target */ = {
-			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
-			buildPhase = 2ACCAFED3034D146005B8706 /* Resources */;
-			membershipExceptions = (
-				Features/GuideRun/View/GuideRunView.swift,
-			);
-		};
-/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		2ACCAFF33034D146005B8706 /* app-watch Watch App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				4B9261373036294100230B59 /* Exceptions for "app-watch Watch App" folder in "app-watch Watch App" target */,
-				4B9261383036294100230B59 /* Exceptions for "app-watch Watch App" folder in "Copy Bundle Resources" phase from "app-watch Watch App" target */,
-			);
 			path = "app-watch Watch App";
 			sourceTree = "<group>";
 		};

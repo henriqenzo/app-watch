@@ -11,9 +11,9 @@ import SwiftUI
 /// modos (livre e guiado) — o que muda entre eles são os dados recebidos.
 struct LiveRunView: View {
 
-    @State private var viewModel: GuideRunViewModel
-
-    init(viewModel: GuideRunViewModel = AppContainer.shared.makeGuideRunViewModel()) {
+    @State private var viewModel: RunViewModelProtocol
+    
+    init(viewModel: RunViewModelProtocol) {
         _viewModel = State(initialValue: viewModel)
     }
 
@@ -207,12 +207,14 @@ struct LiveRunView: View {
 private func previewViewModel(speeds: [Double], targetPace: Int?) -> GuideRunViewModel {
     let sessionManager = MockWorkoutSessionManager(speeds: speeds)
     let paceManager = PaceManager(workoutSessionManager: sessionManager)
-    let metronomeManager = MetronomeManager(hapticManager: HapticManager())
     let strideManager = StrideManager(
         paceManager: paceManager,
         workoutSessionManager: sessionManager,
         metronomeManager: metronomeManager
     )
+    let hapticManager = HapticManager()
+    let metronomeManager = MetronomeManager(hapticManager: hapticManager)
+    let settingsStorage = SettingsStorage()
 
     paceManager.onFeedbackChange = { reading in
         guard let feedback = reading.feedback, let delta = reading.deltaSecondsPerKm else { return }
@@ -220,11 +222,13 @@ private func previewViewModel(speeds: [Double], targetPace: Int?) -> GuideRunVie
     }
 
     return GuideRunViewModel(
-        workoutManager: sessionManager,
+        workoutSessionManager: sessionManager,
         paceManager: paceManager,
         targetPace: targetPace,
         metronomeManager: metronomeManager,
-        strideManager: strideManager
+        strideManager: strideManager,
+        hapticManager: hapticManager,
+        settingsStorage: settingsStorage
     )
 }
 

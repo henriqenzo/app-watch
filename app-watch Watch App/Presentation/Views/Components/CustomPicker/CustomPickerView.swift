@@ -26,7 +26,6 @@ struct CustomPickerView: View {
 
     var body: some View {
         VStack(spacing: 2) {
-            // Título em caps, bem apagado
             Text(title.uppercased())
                 .font(.caption2)
                 .foregroundStyle(.tertiary)
