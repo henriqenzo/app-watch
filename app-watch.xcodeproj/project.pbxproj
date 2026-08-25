@@ -462,7 +462,7 @@
 				CODE_SIGN_ENTITLEMENTS = "app-watch Watch App/app-watch Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = TWDCHYXP2J;
+				DEVELOPMENT_TEAM = MB73MN45Q2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "app-watch";
@@ -497,7 +497,7 @@
 				CODE_SIGN_ENTITLEMENTS = "app-watch Watch App/app-watch Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = TWDCHYXP2J;
+				DEVELOPMENT_TEAM = MB73MN45Q2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "app-watch";
