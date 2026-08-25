@@ -24,17 +24,20 @@ class GuideRunViewModel: RunViewModelProtocol {
     private var workoutManager: WorkoutSessionManagerProtocol
     private var paceManager: PaceManagerProtocol
     private var metronomeManager: MetronomeManagerProtocol
+    private var hapticManager: HapticManagerProtocol
     
     init(
         workoutManager: WorkoutSessionManagerProtocol,
         paceManager: PaceManagerProtocol,
         targetPace: Int?,
-        metronomeManager: MetronomeManagerProtocol
+        metronomeManager: MetronomeManagerProtocol,
+        hapticManager: HapticManagerProtocol
     ) {
         self.workoutManager = workoutManager
         self.paceManager = paceManager
         self.targetPace = targetPace
         self.metronomeManager = metronomeManager
+        self.hapticManager = hapticManager
         self.paceManager.targetPace = targetPace
         
         self.workoutManager.onMetricsUpdate = { [weak self] metrics in

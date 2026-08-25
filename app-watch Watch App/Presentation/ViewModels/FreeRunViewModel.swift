@@ -24,15 +24,18 @@ class FreeRunViewModel: RunViewModelProtocol {
     private var workoutSessionManager: WorkoutSessionManagerProtocol
     private var paceManager: PaceManagerProtocol
     private var metronomeManager: MetronomeManagerProtocol
+    private var hapticManager: HapticManagerProtocol
     
     init(
         workoutSessionManager: WorkoutSessionManagerProtocol,
         paceManager: PaceManagerProtocol,
-        metronomeManager: MetronomeManagerProtocol
+        metronomeManager: MetronomeManagerProtocol,
+        hapticManager: HapticManagerProtocol,
     ) {
         self.workoutSessionManager = workoutSessionManager
         self.paceManager = paceManager
         self.metronomeManager = metronomeManager
+        self.hapticManager = hapticManager
         // Modo livre não tem alvo: o chip de feedback nunca aparece.
         self.paceManager.targetPace = nil
         
