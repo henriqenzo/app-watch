@@ -9,14 +9,33 @@ import SwiftUI
 
 struct SettingsView: View {
     
-    @State private var settingsViewModel: SettingsViewModelProtocol
+    @State private var settingsViewModel: SettingsViewModel
 
-    init(settingsViewModel: SettingsViewModelProtocol) {
+    init(settingsViewModel: SettingsViewModel) {
         _settingsViewModel = State(initialValue: settingsViewModel)
     }
-    
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationStack {
+            List {
+                Section {
+                    Toggle(isOn: $settingsViewModel.isMetronomeEnabled) {
+                        Label("Metrônomo", systemImage: "metronome")
+                    }
+                    
+                    Toggle(isOn: $settingsViewModel.isAudioEnabled) {
+                        Label("Áudio", systemImage: "speaker.wave.2.fill")
+                    }
+                    
+                    Toggle(isOn: $settingsViewModel.isPaceAlertEnabled) {
+                        Label("Aviso de Pace", systemImage: "speedometer")
+                    }
+                } header: {
+                    Text("Preferências de Treino")
+                }
+            }
+            .navigationTitle("Ajustes")
+        }
     }
 }
 

@@ -21,44 +21,52 @@ class GuideRunViewModel: RunViewModelProtocol {
     var isMetronomeRunning: Bool = false
     var metronomePPM: Double = 160
     
-    private var workoutManager: WorkoutSessionManagerProtocol
+    private var workoutSessionManager: WorkoutSessionManagerProtocol
     private var paceManager: PaceManagerProtocol
     private var metronomeManager: MetronomeManagerProtocol
     private var hapticManager: HapticManagerProtocol
+    private var settingsStorage: SettingsStorageProtocol
     
     init(
-        workoutManager: WorkoutSessionManagerProtocol,
+        workoutSessionManager: WorkoutSessionManagerProtocol,
         paceManager: PaceManagerProtocol,
         targetPace: Int?,
         metronomeManager: MetronomeManagerProtocol,
-        hapticManager: HapticManagerProtocol
+        hapticManager: HapticManagerProtocol,
+        settingsStorage: SettingsStorageProtocol
     ) {
-        self.workoutManager = workoutManager
+        self.workoutSessionManager = workoutSessionManager
         self.paceManager = paceManager
         self.targetPace = targetPace
         self.metronomeManager = metronomeManager
         self.hapticManager = hapticManager
+        self.settingsStorage = settingsStorage
+        
         self.paceManager.targetPace = targetPace
         
-        self.workoutManager.onMetricsUpdate = { [weak self] metrics in
+        self.workoutSessionManager.onMetricsUpdate = { [weak self] metrics in
             self?.metricsWorkout = metrics
         }
         
-        self.workoutManager.onElapsedTimeUpdate = { [weak self] elapsedTime in
+        self.workoutSessionManager.onElapsedTimeUpdate = { [weak self] elapsedTime in
             self?.metricsWorkout.duration = elapsedTime
         }
         
-        self.workoutManager.onSessionStateUpdate = { [weak self] sessionState in
+        self.workoutSessionManager.onSessionStateUpdate = { [weak self] sessionState in
             self?.sessionState = sessionState
         }
         
-        self.workoutManager.onAuthorizationUpdate = { [weak self] isAuthorized in
+        self.workoutSessionManager.onAuthorizationUpdate = { [weak self] isAuthorized in
             self?.isAuthorized = isAuthorized
         }
         
         self.paceManager.onPaceUpdate = { [weak self] reading in
             self?.currentPace = reading.secondsPerKm
             self?.paceFeedback = reading.feedback
+            
+            if self?.settingsStorage.isPaceAlertEnabled == true && self?.paceFeedback != .onTarget {
+                self?.hapticManager.playWarning()
+            }
         }
         
         self.metronomeManager.onPPMUpdate = { [weak self] ppm in
@@ -71,10 +79,14 @@ class GuideRunViewModel: RunViewModelProtocol {
     }
 
     func startRunning() {
-        workoutManager.requestAuthorization()
+        workoutSessionManager.requestAuthorization()
         
-        Task { [workoutManager] in
-            await workoutManager.startSession()
+        Task { [workoutSessionManager] in
+            await workoutSessionManager.startSession()
+            
+            if settingsStorage.isMetronomeEnabled {
+                metronomeManager.start()
+            }
         }
     }
 
