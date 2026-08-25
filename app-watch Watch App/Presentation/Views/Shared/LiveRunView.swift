@@ -207,6 +207,11 @@ struct LiveRunView: View {
 private func previewViewModel(speeds: [Double], targetPace: Int?) -> GuideRunViewModel {
     let sessionManager = MockWorkoutSessionManager(speeds: speeds)
     let paceManager = PaceManager(workoutSessionManager: sessionManager)
+    let strideManager = StrideManager(
+        paceManager: paceManager,
+        workoutSessionManager: sessionManager,
+        metronomeManager: metronomeManager
+    )
     let hapticManager = HapticManager()
     let metronomeManager = MetronomeManager(hapticManager: hapticManager)
     let settingsStorage = SettingsStorage()
@@ -221,6 +226,7 @@ private func previewViewModel(speeds: [Double], targetPace: Int?) -> GuideRunVie
         paceManager: paceManager,
         targetPace: targetPace,
         metronomeManager: metronomeManager,
+        strideManager: strideManager,
         hapticManager: hapticManager,
         settingsStorage: settingsStorage
     )
