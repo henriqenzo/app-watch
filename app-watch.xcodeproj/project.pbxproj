@@ -39,35 +39,9 @@
 		2ACCAFEF3034D146005B8706 /* app-watch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "app-watch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		4B9261373036294100230B59 /* Exceptions for "app-watch Watch App" folder in "app-watch Watch App" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Features/GuideRun/View/GuideRunView.swift,
-				Features/GuideRun/ViewModel/GuideRunViewModel.swift,
-			);
-			target = 2ACCAFEE3034D146005B8706 /* app-watch Watch App */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
-/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-		4B9261383036294100230B59 /* Exceptions for "app-watch Watch App" folder in "Copy Bundle Resources" phase from "app-watch Watch App" target */ = {
-			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
-			buildPhase = 2ACCAFED3034D146005B8706 /* Resources */;
-			membershipExceptions = (
-				Features/GuideRun/View/GuideRunView.swift,
-				Features/GuideRun/ViewModel/GuideRunViewModel.swift,
-			);
-		};
-/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		2ACCAFF33034D146005B8706 /* app-watch Watch App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				4B9261373036294100230B59 /* Exceptions for "app-watch Watch App" folder in "app-watch Watch App" target */,
-				4B9261383036294100230B59 /* Exceptions for "app-watch Watch App" folder in "Copy Bundle Resources" phase from "app-watch Watch App" target */,
-			);
 			path = "app-watch Watch App";
 			sourceTree = "<group>";
 		};
@@ -342,7 +316,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = MB73MN45Q2;
+				DEVELOPMENT_TEAM = TWDCHYXP2J;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "app-watch";
@@ -375,7 +349,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = MB73MN45Q2;
+				DEVELOPMENT_TEAM = TWDCHYXP2J;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "app-watch";
@@ -409,6 +383,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = MB73MN45Q2;
 				INFOPLIST_KEY_CFBundleDisplayName = "app-watch";
+				IPHONEOS_DEPLOYMENT_TARGET = 13;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "br.com.henriqenzo.app-watch";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -426,6 +401,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = MB73MN45Q2;
 				INFOPLIST_KEY_CFBundleDisplayName = "app-watch";
+				IPHONEOS_DEPLOYMENT_TARGET = 13;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "br.com.henriqenzo.app-watch";
 				PRODUCT_NAME = "$(TARGET_NAME)";
