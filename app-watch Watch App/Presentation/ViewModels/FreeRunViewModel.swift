@@ -25,18 +25,21 @@ class FreeRunViewModel: RunViewModelProtocol {
     private var paceManager: PaceManagerProtocol
     private var metronomeManager: MetronomeManagerProtocol
     private var hapticManager: HapticManagerProtocol
+    private var settingsStorage: SettingsStorageProtocol
     
     init(
         workoutSessionManager: WorkoutSessionManagerProtocol,
         paceManager: PaceManagerProtocol,
         metronomeManager: MetronomeManagerProtocol,
         hapticManager: HapticManagerProtocol,
+        settingsStorage: SettingsStorageProtocol
     ) {
         self.workoutSessionManager = workoutSessionManager
         self.paceManager = paceManager
         self.metronomeManager = metronomeManager
         self.hapticManager = hapticManager
-        // Modo livre não tem alvo: o chip de feedback nunca aparece.
+        self.settingsStorage = settingsStorage
+        
         self.paceManager.targetPace = nil
         
         self.workoutSessionManager.onMetricsUpdate = { [weak self] metrics in
@@ -58,6 +61,10 @@ class FreeRunViewModel: RunViewModelProtocol {
         self.paceManager.onPaceUpdate = { [weak self] reading in
             self?.currentPace = reading.secondsPerKm
             self?.paceFeedback = reading.feedback
+            
+            if self?.settingsStorage.isPaceAlertEnabled == true && self?.paceFeedback != .onTarget {
+                self?.hapticManager.playWarning()
+            }
         }
         
         self.metronomeManager.onPPMUpdate = { [weak self] ppm in
@@ -74,6 +81,10 @@ class FreeRunViewModel: RunViewModelProtocol {
         
         Task { [workoutSessionManager] in
             await workoutSessionManager.startSession()
+            
+            if settingsStorage.isMetronomeEnabled {
+                metronomeManager.start()
+            }
         }
     }
 
