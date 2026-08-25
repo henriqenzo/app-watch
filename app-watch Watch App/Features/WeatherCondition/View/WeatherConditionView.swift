@@ -13,15 +13,15 @@ struct WeatherConditionView: View {
     
     var body: some View {
         VStack(alignment: .center) {
-            HStack(spacing: 20) {
+            HStack(spacing: AppSizes.xlarge) {
                 Text("\(temperature)°")
-                    .font(.title2)
+                    .font(AppTypography.title1)
                     .fontWeight(.bold)
                     .foregroundStyle(condition.color)
                     .padding()
                 
                 Image(systemName: condition.icon)
-                    .font(.system(size: 16))
+                    .font(AppTypography.subheadlineSemibold)
                     .fontWeight(.bold)
                     .foregroundStyle(condition.color)
                     .padding()
@@ -38,7 +38,7 @@ struct WeatherConditionView: View {
                     .bold()
                 
                 Text(condition.subtitle)
-                    .font(.system(size: 12))
+                    .font(AppTypography.caption)
                     .multilineTextAlignment(.center)
             }
         }

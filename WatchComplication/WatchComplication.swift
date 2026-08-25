@@ -32,7 +32,7 @@ struct Provider: AppIntentTimelineProvider {
         }
         
         let entry = SimpleEntry(date: Date(), condition: current?.condition ?? .good, temperature: current?.temperature ?? 24)
-        let nextUpdate = Calendar.current.date(byAdding: .minute, value: 30, to: Date())!
+        let nextUpdate = Calendar.current.date(byAdding: .minute, value: 10, to: Date())!
         return Timeline(entries: [entry], policy: .after(nextUpdate))
     }
     

@@ -13,7 +13,7 @@ struct WeatherConditionSnapshot: Codable {
     let timestamp: Date
     
     var isStale: Bool {
-        Date().timeIntervalSince(timestamp) > 30 * 60
+        Date().timeIntervalSince(timestamp) > 10 * 60
     }
 }
 

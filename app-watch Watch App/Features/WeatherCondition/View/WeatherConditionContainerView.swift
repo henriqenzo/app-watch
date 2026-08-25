@@ -19,7 +19,7 @@ struct WeatherConditionContainerView: View {
                 WeatherConditionView(temperature: temperature, condition: viewModel.condition)
             } else if let errorMessage = viewModel.errorMessage {
                 Text(errorMessage)
-                    .font(.system(size: 12))
+                    .font(AppTypography.caption)
                     .multilineTextAlignment(.center)
             } else {
                 ProgressView()

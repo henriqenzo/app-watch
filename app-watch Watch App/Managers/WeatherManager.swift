@@ -10,14 +10,21 @@ import Foundation
 import WeatherKit
 import CoreLocation
 
+// MARK: - WeatherManager
+// Responsável por buscar os dados do clima
 struct WeatherManager {
+    // Serviço do WeatherKit responsável por consultar os dados meteorológicos.
     private let service = WeatherService()
     
+    // MARK: - FetchCurrentWeather
+    // Busca o clima atual usando latitude e longitude.
     func fetchCurrentWeather(latitude: Double, longitude: Double) async throws -> CurrentWeather {
+        // Cria uma localização a partir das coordenadas recebidas.
         let location = CLLocation(latitude: latitude, longitude: longitude)
-        
+        // Consulta o WeatherKit para obter os dados do clima.
         let weather = try await service.weather(for: location)
         
+        // Retorna somente os dados do clima atual.
         return weather.currentWeather
     }
 }
