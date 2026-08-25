@@ -1,0 +1,25 @@
+name: Greenlight App Store Compliance
+
+on:
+  pull_request:
+    branches: [develop, main]
+
+jobs:
+  greenlight:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 'stable'
+
+      - name: Install Greenlight
+        run: go install github.com/RevylAI/greenlight/cmd/greenlight@latest
+
+      # TODO: switch to `greenlight preflight . --exit-code` once existing
+      # findings are triaged/cleared and this check should start gating merges.
+      - name: Run Greenlight preflight (report-only)
+        run: greenlight preflight .
