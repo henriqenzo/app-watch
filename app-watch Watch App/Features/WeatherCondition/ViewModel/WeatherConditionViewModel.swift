@@ -13,7 +13,6 @@ import WidgetKit
 
 @Observable
 final class WeatherConditionViewModel: NSObject, CLLocationManagerDelegate {
-    
     private(set) var temperature: Int?
     private(set) var condition: WeatherCondition = .good
     private(set) var errorMessage: String?

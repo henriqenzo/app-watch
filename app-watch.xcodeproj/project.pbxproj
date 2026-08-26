@@ -82,7 +82,7 @@
 		4B9262DE3038BC7E00230B59 /* Exceptions for "app-watch Watch App" folder in "WatchComplicationExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Features/WeatherCondition/WeatherCondition.swift,
+				DataModels/Enums/WeatherCondition.swift,
 				Managers/WeatherConditionCalculator.swift,
 				Managers/WeatherManager.swift,
 				Shared/WeatherConditionShared.swift,
@@ -466,6 +466,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "app-watch";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Este app usa seus dados de saúde para acompanhar seu treino, incluindo frequência cardíaca, passos, velocidade e distância.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Este app precisa acessar seus dados de treino para registrar suas corridas.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Usamos sua localização para mostrar o tempo local";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
@@ -501,6 +503,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "app-watch";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Este app usa seus dados de saúde para acompanhar seu treino, incluindo frequência cardíaca, passos, velocidade e distância.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Este app precisa acessar seus dados de treino para registrar suas corridas.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Usamos sua localização para mostrar o tempo local";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;

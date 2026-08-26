@@ -53,7 +53,7 @@ struct DistancePickerView: View {
                     }
                 }
             }
-            .frame(height: 80)
+            .frame(maxHeight: 80)
         }
     }
 }

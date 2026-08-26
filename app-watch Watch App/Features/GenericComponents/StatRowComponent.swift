@@ -18,13 +18,13 @@ struct StatRowComponent: View {
 
             HStack(alignment: .firstTextBaseline, spacing: 0) {
                 Text(metric.value)
-                    .font(AppTypography.title1)
+                    .font(AppTypography.title3)
                     .foregroundStyle(Color.brandPrimary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
 
                 Text(metric.description)
-                    .font(AppTypography.title3)
+                    .font(AppTypography.caption)
                     .foregroundStyle(Color.textDisable)
 
             }

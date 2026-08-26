@@ -14,9 +14,10 @@ struct HomeView: View {
     @State private var selectedTab = 0
     @State private var viewModel = WeatherConditionViewModel()
     @Environment(\.scenePhase) private var scenePhase
-    
+    @State private var router = Router()
+
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $router.path) {
             TabView(selection: $selectedTab) {
                 VStack(spacing: AppSizes.xmedium) {
                     VStack(spacing: AppSizes.medium) {
@@ -27,7 +28,6 @@ struct HomeView: View {
                                     .fill(Color.brandPrimary.opacity(0.4))
                                     .frame(width: 50, height: 50)
                             )
-                        
                         Text("Vamos correr?")
                             .font(.headline)
                             .fontWeight(.bold)
@@ -39,8 +39,7 @@ struct HomeView: View {
                             label: "Iniciar treino guiado",
                             variantStyle: .primary
                         ) {
-                            showGoalView = true
-                            
+                            router.goTo(.goal)
                         }
                         
                         PrimaryButtonComponent(
@@ -62,8 +61,40 @@ struct HomeView: View {
                 
             }
             .tabViewStyle(.page)
-            .navigationDestination(isPresented: $showGoalView) {
-                GoalView()
+            .navigationDestination(for: Route.self) { route in
+                
+                switch route {
+                    
+                case .goal:
+                    GoalView()
+
+                case .selectPace:
+                    SelectPaceView()
+                case .selectDistance:
+                    SelectDistanceView()
+                case .startTraining:
+                    StartTrainingView()
+                case .liveRunView:
+                    LiveRunView()
+                        .toolbar(.hidden, for: .navigationBar)
+
+                case .finished:
+                    FinishedView{
+                        router.goTo(.summary)
+                    }
+                    .toolbar(.hidden, for: .navigationBar)
+
+
+                case .summary:
+                    SummaryView{
+                        router.goHome()
+                    }
+                    .navigationBarBackButtonHidden(true)
+
+                case .selectTime:
+                    SelectDurationView()
+                }
+                
             }
             .navigationDestination(isPresented: $showWeatherCondition) {
                 WeatherConditionContainerView(viewModel: viewModel)
@@ -81,6 +112,7 @@ struct HomeView: View {
                 viewModel.requestWeather()
             }
         }
+        .environment(router)
     }
 }
 

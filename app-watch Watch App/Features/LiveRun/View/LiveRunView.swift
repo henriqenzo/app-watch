@@ -7,18 +7,27 @@
 
 import SwiftUI
 
+enum Screen {
+    case running
+    case finished
+    case summary
+    
+}
+
 /// Tela exibida durante o treino em andamento. É compartilhada pelos dois
 /// modos (livre e guiado) — o que muda entre eles são os dados recebidos.
 struct LiveRunView: View {
-
+    @Environment(Router.self) private var router
     @State private var viewModel: GuideRunViewModel
+    @State private var selectedPage = 1
+    @State private var screen: Screen = .running
+    @State private var goToHome = false
 
     init(viewModel: GuideRunViewModel = AppContainer.shared.makeGuideRunViewModel()) {
         _viewModel = State(initialValue: viewModel)
     }
 
     // MARK: - Dados formatados
-
     private var heartRate: Int {
         viewModel.metricsWorkout.heartRate
     }
@@ -52,35 +61,54 @@ struct LiveRunView: View {
         String(format: "%.2f", viewModel.metricsWorkout.distanceWalkingRunning)
             .replacingOccurrences(of: ".", with: ",")
     }
-
-    var body: some View {
+    
+    private var runPage: some View {
         ZStack {
             Color.background.ignoresSafeArea()
-
+            
             VStack(spacing: 0) {
                 sensorsRow
-
                 Spacer(minLength: AppSizes.medium)
-
                 paceBlock
-
                 Spacer(minLength: AppSizes.medium)
-
                 Divider()
-                    .overlay(Color.textDisable.opacity(0.25))
-
+                
                 statsRow
                     .padding(.top, AppSizes.medium)
             }
             .padding(.horizontal, AppSizes.small)
         }
-        .task {
-            viewModel.startRunning()
-        }
     }
 
-    // MARK: - Sensores
+    var body: some View {
+        
+        TabView(selection: $selectedPage) {
+            
+            ControlRunningView {
+                viewModel.stopRunning()
+                router.goTo(.finished)
+                
+            }
+            
+            .tag(0)
+            runPage
+                .tag(1)
+            
+        }
+        
+        .tabViewStyle(.page)
+        
+        .task {
+            
+            viewModel.startRunning()
+            
+        }
+        .toolbar(.hidden, for: .navigationBar)
+        
+    }
+    
 
+    // MARK: - Sensores
     private var sensorsRow: some View {
         HStack(spacing: AppSizes.medium) {
             HStack(spacing: AppSizes.small) {

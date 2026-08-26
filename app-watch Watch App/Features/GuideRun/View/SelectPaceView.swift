@@ -8,45 +8,37 @@
 import SwiftUI
 
 struct SelectPaceView: View {
-    
+    @Environment(Router.self) private var router
     @State var minutes: Int = 0
     @State var seconds: Int = 0
-    
+
     var body: some View {
-        VStack {
-            VStack(spacing: 2) {
-                Text("Pace alvo")
-                    .textCase(.uppercase)
-                    .font(.system(size: 11, weight: .semibold))
-                    .foregroundStyle(.pink)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+            VStack {
+                VStack(spacing: 2) {
+                    //                Text("Pace alvo")
+                    //                    .textCase(.uppercase)
+                    //                    .font(AppTypography.footnote)
+                    //                    .fontWeight(.semibold)
+                    //                    .foregroundStyle(.brandPrimary)
+                    //                    .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    Text("Gire a coroa para selecionar")
+                        .font(AppTypography.caption)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundStyle(.gray)
+                }
                 
-                Text("Gire a coroa para selecionar")
-                    .font(.system(size: 10))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .foregroundStyle(.gray)
+                
+                PacePickerView(minutes: $minutes, seconds: $seconds)
+                    .scaleEffect(0.7)
+                
+                
+                PrimaryButtonComponent(label: "Continuar", variantStyle: .primary, action: {
+                    router.goTo(.startTraining)
+                })
             }
-            
-            Spacer()
-            
-            PacePickerView(minutes: $minutes, seconds: $seconds)
-                .scaleEffect(0.7)
-            
-            Spacer()
-            
-            Button(action: {
-                // continue
-            }) {
-                Text("Continuar")
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(.black)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 35)
-                    .background(.pink)
-                    .cornerRadius(12)
-            }
-            .buttonStyle(.plain)
-        }
+        .navigationTitle("Pace alvo")
+        .padding()
     }
 }
 

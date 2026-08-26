@@ -10,7 +10,7 @@ import SwiftUI
 struct ControlRunningView: View {
     
     @State private var guideVM = AppContainer.shared.makeGuideRunViewModel()
-
+    var onFinish: () -> Void
     var body: some View {
         HStack(spacing: AppSizes.xlarge) {
             ControllCellComponent(
@@ -21,7 +21,10 @@ struct ControlRunningView: View {
             ControllCellComponent(
                 title: "Encerrar",
                 variant: guideVM.isRunning ? .deactive : .stop,
-                action: guideVM.stopRunning
+                action: {
+                    guideVM.stopRunning()
+                    onFinish()
+                }
             )
 
         }
@@ -29,5 +32,5 @@ struct ControlRunningView: View {
 }
 
 #Preview {
-    ControlRunningView()
+    ControlRunningView(onFinish: { })
 }
