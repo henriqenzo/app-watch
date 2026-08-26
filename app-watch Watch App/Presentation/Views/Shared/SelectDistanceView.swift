@@ -30,7 +30,7 @@ struct SelectDistanceView: View {
             Spacer()
             
             DistancePickerView(meters: $meters, unit: $unit)
-                .scaleEffect(0.7)
+                .scaleEffect(0.8)
             
             Spacer()
             
