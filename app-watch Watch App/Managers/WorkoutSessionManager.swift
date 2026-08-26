@@ -15,7 +15,8 @@ class WorkoutSessionManager: NSObject, WorkoutSessionManagerProtocol {
     var onSessionStateUpdate: ((HKWorkoutSessionState) -> Void)?
     var onAuthorizationUpdate: ((Bool) -> Void)?
     var onSpeedUpdate: ((Double) -> Void)?
-    
+    var onStrideUpdate: ((Double) -> Void)?
+
     private var currentMetrics = WorkoutMetrics()
     
     private let healthStore = HKHealthStore()
@@ -171,6 +172,9 @@ extension WorkoutSessionManager: HKLiveWorkoutBuilderDelegate {
         
         let speedType = HKQuantityType.quantityType(forIdentifier: .runningSpeed)
         let didCollectSpeed = collectedTypes.contains { ($0 as? HKQuantityType) == speedType }
+
+        let strideType = HKQuantityType.quantityType(forIdentifier: .runningStrideLength)
+        let didCollectStride = collectedTypes.contains { ($0 as? HKQuantityType) == strideType }
         
         for type in collectedTypes {
             guard let quantityType = type as? HKQuantityType else { continue }
@@ -232,6 +236,10 @@ extension WorkoutSessionManager: HKLiveWorkoutBuilderDelegate {
             
             if didCollectSpeed {
                 self.onSpeedUpdate?(self.currentMetrics.runningSpeed)
+            }
+
+            if didCollectStride {
+                self.onStrideUpdate?(self.currentMetrics.runningStrideLength)
             }
         }
     }

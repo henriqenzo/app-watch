@@ -21,6 +21,8 @@ protocol RunViewModelProtocol: AnyObject {
     
     var isMetronomeRunning: Bool { get }
     var metronomePPM: Double { get }
+    /// Cadência alvo (ideal) calculada no GuideRun. `nil` no FreeRun.
+    var targetCadence: Int? { get }
 
     func startRunning()
     func pauseResumeRunning()
