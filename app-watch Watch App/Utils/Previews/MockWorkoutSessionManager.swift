@@ -70,11 +70,13 @@ final class MockWorkoutSessionManager: WorkoutSessionManagerProtocol {
     }
 
     func pauseSession() {
+        print("A sessão de treino vai pausar");
         task?.cancel()
         onSessionStateUpdate?(.paused)
     }
 
     func resumeSession() {
+        print("A sessão de treino vai voltar");
         onSessionStateUpdate?(.running)
     }
 

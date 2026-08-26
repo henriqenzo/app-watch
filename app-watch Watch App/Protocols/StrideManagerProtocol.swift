@@ -17,4 +17,7 @@ protocol StrideManagerProtocol: AnyObject {
     var onCadenceUpdate: ((CadenceReading) -> Void)? { get set }
 
     func reset()
+
+    /// Recalcula a cadência alvo com o pace-alvo e a passada atuais
+    func recalculateCadence()
 }
