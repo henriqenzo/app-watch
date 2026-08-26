@@ -30,7 +30,7 @@ struct PacePickerView: View {
     }
 
     var body: some View {
-        HStack(spacing: 0) {
+        HStack(spacing: -20) {
             WheelColumnView(
                 values: minutesRange,
                 selection: $minutes,

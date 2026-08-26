@@ -30,7 +30,7 @@ struct WheelColumnView<Value: Hashable>: View {
                         label(value)
                         if let suffix, isSelected {
                             Text(suffix)
-                                .font(.system(size: 14, weight: .medium, design: .rounded))
+                                .font(.system(size: 22, weight: .medium, design: .rounded))
                                 .foregroundStyle(.white)
                         }
                     }
@@ -41,7 +41,8 @@ struct WheelColumnView<Value: Hashable>: View {
                     .background {
                         if isFocused && isSelected {
                             RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                .fill(Color.white.opacity(0.12))
+                                .fill(Color.white.opacity(0.2))
+                                .frame(width: 55)
                         }
                     }
                     .id(value)

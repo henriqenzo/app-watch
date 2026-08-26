@@ -33,9 +33,8 @@ struct DurationPickerView: View {
         HStack(spacing: 0) {
             // Label "hrs" à esquerda da coluna de horas
             Text("hrs")
-                .font(.system(size: 10, weight: .medium))
-                .foregroundStyle(.secondary.opacity(0.6))
-                .frame(width: 24)
+                .font(.system(size: 18, weight: .medium))
+                .foregroundStyle(.secondary.opacity(0.9))
 
             WheelColumnView(values: hoursRange, selection: $hours, isFocused: activeColumn == .hours) { h in
                 Text("\(h)")
@@ -53,9 +52,8 @@ struct DurationPickerView: View {
 
             // Label "min" à direita da coluna de minutos
             Text("min")
-                .font(.system(size: 10, weight: .medium))
-                .foregroundStyle(.secondary.opacity(0.6))
-                .frame(width: 24)
+                .font(.system(size: 18, weight: .medium))
+                .foregroundStyle(.secondary.opacity(0.9))
         }
         .frame(height: 90)
         .focusable()

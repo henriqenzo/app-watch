@@ -60,22 +60,20 @@ struct DistancePickerView: View {
     }
 
     var body: some View {
-        HStack(spacing: 8) {
-            // Botões de unidade empilhados à esquerda da coluna
+        HStack(spacing: -20) {
             VStack(spacing: 6) {
                 unitButton(.kilometers)
                 unitButton(.meters)
             }
 
-            // Coluna de seleção
             Group {
                 if unit == .kilometers {
-                    WheelColumnView(values: kmOptions, selection: kmSelection) { km in
+                    WheelColumnView(values: kmOptions, selection: kmSelection, suffix: "km") { km in
                         Text(String(format: "%.1f", km))
                             .font(.system(size: 24, weight: .semibold, design: .rounded).monospacedDigit())
                     }
                 } else {
-                    WheelColumnView(values: meterOptions, selection: meterSelection) { m in
+                    WheelColumnView(values: meterOptions, selection: meterSelection, suffix: "m") { m in
                         Text("\(m)")
                             .font(.system(size: 24, weight: .semibold, design: .rounded).monospacedDigit())
                     }
@@ -119,10 +117,15 @@ struct DistancePickerView: View {
     private func unitButton(_ option: DistanceUnit) -> some View {
         Button {
             unit = option
+            // Reseta para o primeiro valor da nova unidade
+            switch option {
+            case .kilometers: meters = kmOptions[0] * 1000   // 0.5 km
+            case .meters:     meters = Double(meterOptions[0]) // 100 m
+            }
         } label: {
             Text(option.rawValue)
-                .font(.system(size: 13, weight: .semibold))
-                .padding(.horizontal, 10)
+                .font(.system(size: 20, weight: .semibold))
+                .padding(.horizontal, 12)
                 .padding(.vertical, 4)
         }
         .buttonStyle(.plain)
