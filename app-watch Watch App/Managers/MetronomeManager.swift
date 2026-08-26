@@ -36,9 +36,10 @@ final class MetronomeManager: MetronomeManagerProtocol {
     static let maxPPM: Double = 240
 
     private let hapticManager: HapticManagerProtocol
+    private let settingsStorage: SettingsStorageProtocol
 
     var audioFileName: String = "metronome-click"
-    var audioFileExtension: String = "mp3"
+    var audioFileExtension: String = "MP3"
 
     private var audioPlayer: AVAudioPlayer?
 
@@ -50,14 +51,27 @@ final class MetronomeManager: MetronomeManagerProtocol {
     )
 
     private var intervalNanoseconds: UInt64 = 0
+    private var lastBeat: UInt64 = 0
     private var nextBeat: UInt64 = 0
 
-    init(hapticManager: HapticManagerProtocol) {
+    init(
+        hapticManager: HapticManagerProtocol,
+        settingsStorage: SettingsStorageProtocol = SettingsStorage()
+    ) {
         self.hapticManager = hapticManager
+        self.settingsStorage = settingsStorage
         setupAudioPlayer()
     }
 
     private func setupAudioPlayer() {
+        do {
+            let session = AVAudioSession.sharedInstance()
+            try session.setCategory(.playback, mode: .default)
+            try session.setActive(true)
+        } catch {
+            print("[MetronomeManager] Erro ao configurar AVAudioSession: \(error)")
+        }
+
         guard let url = Bundle.main.url(
             forResource: audioFileName,
             withExtension: audioFileExtension
@@ -86,7 +100,9 @@ final class MetronomeManager: MetronomeManagerProtocol {
 
         isRunning = true
 
-        nextBeat = DispatchTime.now().uptimeNanoseconds
+        let now = DispatchTime.now().uptimeNanoseconds
+        lastBeat = now
+        nextBeat = now
 
         scheduleNextBeat()
     }
@@ -111,10 +127,20 @@ final class MetronomeManager: MetronomeManagerProtocol {
         guard ppm != clamped else { return }
 
         ppm = clamped
+        intervalNanoseconds = UInt64((60.0 / ppm) * 1_000_000_000)
 
-        if isRunning {
-            start()
-        }
+        guard isRunning else { return }
+
+        // Recalcula o próximo beat de forma suave sem disparar beat imediatamente
+        let now = DispatchTime.now().uptimeNanoseconds
+        let targetNextBeat = lastBeat + intervalNanoseconds
+        
+        nextBeat = max(targetNextBeat, now + 50_000_000)
+
+        timer?.cancel()
+        timer = nil
+
+        scheduleNextBeat()
     }
 
     func increment(by amount: Double = 1) {
@@ -142,9 +168,11 @@ final class MetronomeManager: MetronomeManagerProtocol {
         newTimer.setEventHandler { [weak self] in
             guard let self else { return }
 
+            let now = DispatchTime.now().uptimeNanoseconds
+            self.lastBeat = now
             self.fireBeat()
 
-            self.nextBeat += self.intervalNanoseconds
+            self.nextBeat = now + self.intervalNanoseconds
 
             self.timer?.cancel()
             self.timer = nil
@@ -158,8 +186,12 @@ final class MetronomeManager: MetronomeManagerProtocol {
     }
 
     private func fireBeat() {
-        hapticManager.playBeat()
-        playAudio()
+        if settingsStorage.isHapticEnabled {
+            hapticManager.playBeat()
+        }
+        if settingsStorage.isAudioEnabled {
+            playAudio()
+        }
     }
 
     private func playAudio() {
