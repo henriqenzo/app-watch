@@ -19,8 +19,8 @@ struct SettingsView: View {
         NavigationStack {
             List {
                 Section {
-                    Toggle(isOn: $settingsViewModel.isMetronomeEnabled) {
-                        Label("Metrônomo", systemImage: "metronome")
+                    Toggle(isOn: $settingsViewModel.isHapticEnabled) {
+                        Label("Vibração", systemImage: "waveform")
                     }
                     
                     Toggle(isOn: $settingsViewModel.isAudioEnabled) {

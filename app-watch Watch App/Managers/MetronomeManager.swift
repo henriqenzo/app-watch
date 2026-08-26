@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import AVFoundation
 
 final class MetronomeManager: MetronomeManagerProtocol {
 
@@ -31,10 +32,15 @@ final class MetronomeManager: MetronomeManagerProtocol {
         }
     }
 
-    static let minBPM: Double = 40
-    static let maxBPM: Double = 240
+    static let minPPM: Double = 40
+    static let maxPPM: Double = 240
 
     private let hapticManager: HapticManagerProtocol
+
+    var audioFileName: String = "metronome-click"
+    var audioFileExtension: String = "mp3"
+
+    private var audioPlayer: AVAudioPlayer?
 
     private var timer: DispatchSourceTimer?
 
@@ -48,6 +54,25 @@ final class MetronomeManager: MetronomeManagerProtocol {
 
     init(hapticManager: HapticManagerProtocol) {
         self.hapticManager = hapticManager
+        setupAudioPlayer()
+    }
+
+    private func setupAudioPlayer() {
+        guard let url = Bundle.main.url(
+            forResource: audioFileName,
+            withExtension: audioFileExtension
+        ) else {
+            print("[MetronomeManager] Arquivo de áudio '\(audioFileName).\(audioFileExtension)' não encontrado no bundle.")
+            return
+        }
+
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: url)
+            audioPlayer?.prepareToPlay()
+            audioPlayer?.volume = 1.0
+        } catch {
+            print("[MetronomeManager] Erro ao carregar áudio: \(error)")
+        }
     }
 
     func start() {
@@ -79,8 +104,8 @@ final class MetronomeManager: MetronomeManagerProtocol {
 
     func updateBPM(_ newValue: Double) {
         let clamped = min(
-            max(newValue, Self.minBPM),
-            Self.maxBPM
+            max(newValue, Self.minPPM),
+            Self.maxPPM
         )
 
         guard ppm != clamped else { return }
@@ -134,6 +159,16 @@ final class MetronomeManager: MetronomeManagerProtocol {
 
     private func fireBeat() {
         hapticManager.playBeat()
+        playAudio()
+    }
+
+    private func playAudio() {
+        guard let player = audioPlayer else { return }
+        if player.isPlaying {
+            player.stop()
+            player.currentTime = 0
+        }
+        player.play()
     }
 
     deinit {

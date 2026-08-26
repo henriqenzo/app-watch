@@ -11,7 +11,7 @@ final class SettingsStorage: SettingsStorageProtocol {
     private let defaults: UserDefaults
     
     private enum Keys {
-        static let isMetronomeEnabled = "is_metronome_enabled"
+        static let isHapticEnabled = "is_haptic_enabled"
         static let isAudioEnabled = "is_audio_enabled"
         static let isPaceAlertEnabled = "is_pace_alert_enabled"
     }
@@ -20,15 +20,15 @@ final class SettingsStorage: SettingsStorageProtocol {
         self.defaults = defaults
         
         defaults.register(defaults: [
-            Keys.isMetronomeEnabled: true,
+            Keys.isHapticEnabled: true,
             Keys.isAudioEnabled: true,
             Keys.isPaceAlertEnabled: true
         ])
     }
     
-    var isMetronomeEnabled: Bool {
-        get { defaults.bool(forKey: Keys.isMetronomeEnabled) }
-        set { defaults.set(newValue, forKey: Keys.isMetronomeEnabled) }
+    var isHapticEnabled: Bool {
+        get { defaults.bool(forKey: Keys.isHapticEnabled) }
+        set { defaults.set(newValue, forKey: Keys.isHapticEnabled) }
     }
     
     var isAudioEnabled: Bool {

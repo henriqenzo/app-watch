@@ -91,10 +91,6 @@ class FreeRunViewModel: RunViewModelProtocol {
         
         Task { [workoutSessionManager] in
             await workoutSessionManager.startSession()
-            
-            if settingsStorage.isMetronomeEnabled {
-                metronomeManager.start()
-            }
         }
     }
 
