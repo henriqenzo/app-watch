@@ -95,6 +95,7 @@ class WorkoutSessionManager: NSObject, WorkoutSessionManagerProtocol {
     }
     
     func endSession() {
+        print("A funcao endSession dentro de WorkoutManager esta sendo chamada")
         session?.stopActivity(with: .now)
     }
     

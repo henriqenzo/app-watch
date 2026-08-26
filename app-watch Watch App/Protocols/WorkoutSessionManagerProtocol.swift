@@ -23,7 +23,7 @@ protocol WorkoutSessionManagerProtocol: AnyObject {
 
     func requestAuthorization()
     func startSession() async
-    func pauseSession()
+    func pauseSession() 
     func resumeSession()
     func endSession()
 }
