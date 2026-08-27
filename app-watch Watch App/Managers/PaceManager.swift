@@ -31,7 +31,7 @@ final class PaceManager: PaceManagerProtocol {
     
     private var lastFeedback: PaceFeedback?
     
-    init(workoutSessionManager: WorkoutSessionManagerProtocol, targetPace: Int? = nil, tolerance: Int = 10, smoothingFactor: Double = 0.3) {
+    init(workoutSessionManager: WorkoutSessionManagerProtocol, targetPace: Int? = nil, tolerance: Int = 15, smoothingFactor: Double = 0.3) {
         self.targetPace = targetPace
         self.tolerance = tolerance
         self.smoothingFactor = smoothingFactor
