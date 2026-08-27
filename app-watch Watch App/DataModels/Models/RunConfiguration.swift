@@ -26,7 +26,7 @@ struct RunFlowDestinationView: View {
         case .selectTime:
             SelectDurationView()
         case .startTraining:
-            StartTrainingView()
+            StartTrainingView(targetPace: 100)
         case .liveRun:
             liveRunView
         case .finished:

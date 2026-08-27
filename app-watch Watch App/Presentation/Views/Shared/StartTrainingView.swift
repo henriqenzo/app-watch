@@ -17,14 +17,7 @@ struct StartTrainingView: View {
     }
 
     var body: some View {
-        
-        
         VStack {
-            //                Text("Pronto para começar?")
-            //                    .font(AppTypography.subheadlineSemibold)
-            //
-            //                Spacer()
-            
             VStack(spacing: 8) {
                 VStack {
                     Text("PPM inicial")

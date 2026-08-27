@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-
-
 /// Tela exibida durante o treino em andamento. É compartilhada pelos dois
 /// modos (livre e guiado) — o que muda entre eles são os dados recebidos.
 struct LiveRunView: View {
@@ -126,6 +124,12 @@ struct LiveRunView: View {
                 .minimumScaleFactor(0.85)
                 .layoutPriority(1)
 
+            if let targetPace {
+                Text("alvo \(targetPace)/km")
+                    .font(AppTypography.caption)
+                    .foregroundStyle(Color.textDisable)
+            }
+
             if let paceFeedback {
                 paceChip(paceFeedback)
                     .padding(.top, AppSizes.small)
@@ -138,7 +142,7 @@ struct LiveRunView: View {
             Image(systemName: feedback.icon)
                 .font(.system(size: 10, weight: .bold))
 
-            Text(chipLabel(for: feedback))
+            Text(feedback.title)
                 .font(AppTypography.caption)
         }
         .foregroundStyle(feedback.color)
@@ -150,12 +154,6 @@ struct LiveRunView: View {
             feedback.color.opacity(0.18),
             in: RoundedRectangle(cornerRadius: CGFloat(AppRadius.chipRadius))
         )
-    }
-
-    /// O alvo só aparece no modo guiado, onde existe um pace de referência.
-    private func chipLabel(for feedback: PaceFeedback) -> String {
-        guard let targetPace else { return feedback.title }
-        return "\(feedback.title) · alvo \(targetPace)"
     }
 
     // MARK: - Tempo e distância
