@@ -8,6 +8,12 @@
 import SwiftUI
 
 struct StartTrainingView: View {
+    let targetPace: Int
+
+    private var targetPaceLabel: String {
+        FormatMinutes.pace(targetPace) + "/km"
+    }
+
     var body: some View {
         VStack {
             Text("Pronto para começar?")
@@ -38,7 +44,7 @@ struct StartTrainingView: View {
                         .font(.system(size: 10))
                         .foregroundStyle(.gray)
                     
-                    Text("5'30''/km")
+                    Text(targetPaceLabel)
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundStyle(.white)
                 }
@@ -63,5 +69,5 @@ struct StartTrainingView: View {
 }
 
 #Preview {
-    StartTrainingView()
+    StartTrainingView(targetPace: AppContainer.defaultTargetPace)
 }
