@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SummaryView: View {
     let viewModel: RunViewModelProtocol
+    var onFinish: () -> Void = {}
 
     private var metrics: [Metric] {
         [
@@ -23,13 +24,33 @@ struct SummaryView: View {
 
     var body: some View {
         ScrollView {
+             Text("Estatísticas")
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .padding(.top)
+                    
             VStack(alignment: .leading, spacing: AppSizes.medium) {
                 ForEach(metrics, id: \.self) { metric in
                     StatRowComponent(metric: metric)
                 }
+                .padding(.bottom, AppSizes.medium)
+                .padding(.top)
+                
             }
-            .padding(.bottom, AppSizes.medium)
+         
         }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    onFinish()
+                } label: {
+                    Image(systemName: "checkmark")
+                }
+                .tint(.brandPrimary)
+            }
+        }
+        .toolbar(.visible, for: .navigationBar)
+
     }
 }
 

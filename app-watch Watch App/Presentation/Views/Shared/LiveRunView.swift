@@ -10,15 +10,13 @@ import SwiftUI
 /// Tela exibida durante o treino em andamento. É compartilhada pelos dois
 /// modos (livre e guiado) — o que muda entre eles são os dados recebidos.
 struct LiveRunView: View {
-
     @State private var viewModel: RunViewModelProtocol
-    
+
     init(viewModel: RunViewModelProtocol) {
-        _viewModel = State(initialValue: viewModel)
+            _viewModel = State(initialValue: viewModel)
     }
 
     // MARK: - Dados formatados
-
     private var heartRate: Int {
         viewModel.metricsWorkout.heartRate
     }
@@ -52,32 +50,37 @@ struct LiveRunView: View {
         String(format: "%.2f", viewModel.metricsWorkout.distanceWalkingRunning)
             .replacingOccurrences(of: ".", with: ",")
     }
-
-    var body: some View {
+    
+    private var runPage: some View {
         ZStack {
             Color.background.ignoresSafeArea()
-
+            
             VStack(spacing: 0) {
                 sensorsRow
-
                 Spacer(minLength: AppSizes.medium)
-
                 paceBlock
-
                 Spacer(minLength: AppSizes.medium)
-
                 Divider()
-                    .overlay(Color.textDisable.opacity(0.25))
-
+                
                 statsRow
                     .padding(.top, AppSizes.medium)
             }
             .padding(.horizontal, AppSizes.small)
+            
         }
     }
 
-    // MARK: - Sensores
+    var body: some View {
+        
+        runPage
+        .toolbar(.hidden, for: .navigationBar)
+        .padding(.vertical)
 
+        
+    }
+    
+
+    // MARK: - Sensores
     private var sensorsRow: some View {
         HStack(spacing: AppSizes.medium) {
             HStack(spacing: AppSizes.small) {
@@ -118,10 +121,9 @@ struct LiveRunView: View {
                 .foregroundStyle(Color.textDisable)
 
             Text(pace)
-                .font(AppTypography.largeTitle)
+                .font(AppTypography.title1)
                 .foregroundStyle(Color.brandPrimary)
                 .lineLimit(1)
-                .minimumScaleFactor(0.85)
                 .layoutPriority(1)
 
             if let targetPace {
@@ -207,6 +209,7 @@ func previewViewModel(speeds: [Double], targetPace: Int?) -> GuideRunViewModel {
     let metronomeManager = MetronomeManager(hapticManager: hapticManager)
     let sessionManager = MockWorkoutSessionManager(speeds: speeds)
     let paceManager = PaceManager(workoutSessionManager: sessionManager)
+
     let strideManager = StrideManager(
         paceManager: paceManager,
         workoutSessionManager: sessionManager,

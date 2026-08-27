@@ -8,46 +8,45 @@
 import SwiftUI
 
 struct SelectPaceView: View {
+    @Environment(RunFlowState.self) private var flow
     
-    @State var minutes: Int = 0
-    @State var seconds: Int = 0
+    @State private var minutes: Int = 5
+    @State private var seconds: Int = 30
     
     var body: some View {
-        VStack {
-            VStack(spacing: 2) {
-                Text("Pace alvo")
-                    .textCase(.uppercase)
-                    .font(.system(size: 11, weight: .semibold))
-                    .foregroundStyle(.pink)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                
-                Text("Gire a coroa para selecionar")
-                    .font(.system(size: 10))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .foregroundStyle(.gray)
-            }
-            
-            Spacer()
+        VStack(alignment: .center) {
+            Text("Gire a coroa para selecionar")
+                .font(AppTypography.caption)
+                .foregroundStyle(.gray)
             
             PacePickerView(minutes: $minutes, seconds: $seconds)
-                .scaleEffect(0.7)
             
             Spacer()
-            
-            Button(action: {
-                // continue
-            }) {
-                Text("Continuar")
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(.black)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 35)
-                    .background(.pink)
-                    .cornerRadius(12)
+        }
+        .navigationTitle("Pace alvo")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    flow.targetPace = minutes * 60 + seconds
+                    flow.goTo(.startTraining)
+                } label: {
+                    Image(systemName: "checkmark")
+                }
+                .tint(.brandPrimary)
             }
-            .buttonStyle(.plain)
+        }
+        .padding()
+        .onAppear {
+            guard let targetPace = flow.targetPace else { return }
+            minutes = targetPace / 60
+            seconds = targetPace % 60
         }
     }
+}
+
+#Preview {
+    SelectPaceView()
+        .environment(RunFlowState())
 }
 
 #Preview {

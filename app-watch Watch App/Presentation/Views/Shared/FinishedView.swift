@@ -16,8 +16,8 @@ struct FinishedView: View {
             Color.black.ignoresSafeArea()
 
             // Confetes ficam atrás do conteúdo e não capturam toques.
-            ConfettiRainView()
-                .ignoresSafeArea()
+//            ConfettiRainView()
+//                .ignoresSafeArea()
 
             VStack(spacing: 0) {
                 Spacer(minLength: 0)
@@ -80,10 +80,18 @@ private struct ConfettiRainView: View {
             }
         }
         .allowsHitTesting(false)
-        .task {
+        .onAppear {
             startedAt = .now
+            isFinished = false
+            
+        }
+        
+        .task {
+
             try? await Task.sleep(for: .seconds(Self.totalDuration))
+            
             isFinished = true
+            
         }
     }
 

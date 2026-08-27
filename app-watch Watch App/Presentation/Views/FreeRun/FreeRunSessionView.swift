@@ -10,7 +10,7 @@ import SwiftUI
 struct FreeRunSessionView: View {
 
     @State private var viewModel: RunViewModelProtocol
-    @State private var selection = 1
+    @State private var selection = 0
 
     init(viewModel: RunViewModelProtocol) {
         _viewModel = State(initialValue: viewModel)
@@ -22,6 +22,8 @@ struct FreeRunSessionView: View {
                 .tag(0)
             ControlFreeView(freeViewModel: viewModel)
                 .tag(1)
+                .toolbar(.hidden, for: .navigationBar)
+
         }
         .tabViewStyle(.page)
         .background(Color.background.ignoresSafeArea())
