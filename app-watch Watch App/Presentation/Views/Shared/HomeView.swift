@@ -67,7 +67,6 @@ struct HomeView: View {
             
             guard url.scheme == "myapp", url.host == "weather" else { return }
             
-            flow.path = NavigationPath()
             
             selectedTab = 1
             
