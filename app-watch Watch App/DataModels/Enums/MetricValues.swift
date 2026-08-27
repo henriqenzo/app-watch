@@ -7,9 +7,10 @@
 
 import Foundation
 
-enum Metric {
+enum Metric: Hashable {
     case heartRate(bpm: Int)
     case averageHeartRate(bpm: Int)
+    case cadence(ppm: Int)
     case calories(Double)
     case stepCount(Int)
     case distance(kilometers: Double)
@@ -20,13 +21,13 @@ enum Metric {
     var value: String {
         switch self {
         case .calories(let kcal):
-            "\(kcal)"
+            String(format: "%.0f", kcal)
         case .distance(let km):
             String(format: "%.2f", km)
         case .pace(let seconds):
             FormatMinutes.clock(seconds)
         case .duration(let interval):
-            "\(interval)"
+            FormatMinutes.clock(Int(interval))
         case .heartRate(let bpm):
             "\(bpm)"
         case .averageHeartRate(let bpm):
@@ -35,6 +36,8 @@ enum Metric {
             "\(steps)"
         case .strideLength(let meters):
             "\(meters)"
+        case .cadence(let ppm):
+            "\(ppm)"
         }
     }
 
@@ -48,6 +51,8 @@ enum Metric {
         case .averageHeartRate: "bpm"
         case .stepCount: "passos"
         case .strideLength: "m"
+        case .cadence:
+            "rpm"
         }
     }
 
@@ -61,6 +66,7 @@ enum Metric {
         case .averageHeartRate: "BPM"
         case .stepCount: "PASSOS"
         case .strideLength: "M"
+        case .cadence: "CADÊNCIA MÉDIA"
         }
     }
 

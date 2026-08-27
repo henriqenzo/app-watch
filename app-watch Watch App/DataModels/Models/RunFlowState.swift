@@ -18,6 +18,9 @@ final class RunFlowState {
     var targetDistance: Double?
     var targetTime: TimeInterval?
     
+    var sessionViewModel: RunViewModelProtocol?
+
+    
     enum GoalType {
         case pace
         case distanceAndTime

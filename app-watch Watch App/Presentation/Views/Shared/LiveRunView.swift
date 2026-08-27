@@ -124,7 +124,6 @@ struct LiveRunView: View {
                 .font(AppTypography.title1)
                 .foregroundStyle(Color.brandPrimary)
                 .lineLimit(1)
-                .frame(width: 70)
                 .layoutPriority(1)
 
             if let targetPace {
