@@ -10,8 +10,24 @@ import SwiftUI
 import WeatherKit
 
 struct Provider: AppIntentTimelineProvider {
-    private let weatherManager = WeatherManager()
-    private let calculator = WeatherConditionCalculator()
+    private let weatherManager: WeatherManagerProtocol
+    
+    private let calculator: WeatherConditionCalculatorProtocol
+    
+    init() {
+        self.init(
+            weatherManager: WeatherManager(),
+            calculator: WeatherConditionCalculator()
+        )
+    }
+    
+    init(
+        weatherManager: WeatherManagerProtocol,
+        calculator: WeatherConditionCalculatorProtocol
+    ) {
+        self.weatherManager = weatherManager
+        self.calculator = calculator
+    }
     
     func placeholder(in context: Context) -> SimpleEntry {
         SimpleEntry(date: Date(), condition: .good, temperature: 24)

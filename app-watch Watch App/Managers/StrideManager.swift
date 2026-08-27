@@ -59,7 +59,11 @@ final class StrideManager: StrideManagerProtocol {
             print("O strideLenght é: \(self.strideLength)")
         }
 
-        targetCadence = cadence(forPace: paceManager.targetPace, strideLength: self.strideLength)
+        recalculateCadence()
+    }
+
+    func recalculateCadence() {
+        targetCadence = cadence(forPace: paceManager.targetPace, strideLength: strideLength)
 
         // GuideRun (targetPace != nil ⇒ targetCadence != nil): dirige o metrônomo.
         // FreeRun (targetPace == nil ⇒ targetCadence == nil): NÃO toca no PPM (é do usuário).

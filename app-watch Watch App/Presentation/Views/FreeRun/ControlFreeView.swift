@@ -8,9 +8,10 @@
 import SwiftUI
 
 struct ControlFreeView: View {
+    @Environment(RunFlowState.self) private var flow
     
     @State private var freeViewModel: RunViewModelProtocol
-
+    
     init(freeViewModel: RunViewModelProtocol) {
         _freeViewModel = State(initialValue: freeViewModel)
     }
@@ -26,9 +27,13 @@ struct ControlFreeView: View {
                 ControllCellComponent(
                     title: "Encerrar",
                     variant: freeViewModel.isRunning ? .deactive : .stop,
-                    action: freeViewModel.stopRunning
+                    action: {
+                        freeViewModel.stopRunning()
+                        flow.goTo(.finished)
+                    }
                 )
             }
+            
             PrimaryButtonComponent(
                 label: "Editar metas",
                 variantStyle: .terciary,
@@ -38,6 +43,18 @@ struct ControlFreeView: View {
             )
         }
     }
+}
+
+#Preview {
+    struct PreviewWrapper: View {
+        @State private var container = AppContainer()
+        
+        var body: some View {
+            ControlFreeView(freeViewModel: container.makeFreeRunViewModel())
+                .environment(RunFlowState())
+        }
+    }
+    return PreviewWrapper()
 }
 
 #Preview {

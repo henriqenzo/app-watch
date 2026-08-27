@@ -26,7 +26,10 @@ final class AppContainer {
         self.workoutSessionManager = WorkoutSessionManager()
         self.paceManager = PaceManager(workoutSessionManager: workoutSessionManager)
         self.hapticManager = HapticManager()
-        self.metronomeManager = MetronomeManager(hapticManager: hapticManager)
+        self.metronomeManager = MetronomeManager(
+            hapticManager: hapticManager,
+            settingsStorage: settingsStorage
+        )
         self.strideManager = StrideManager(
             paceManager: paceManager,
             workoutSessionManager: workoutSessionManager,

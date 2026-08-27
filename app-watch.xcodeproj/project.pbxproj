@@ -78,6 +78,8 @@
 				DataModels/Enums/WeatherCondition.swift,
 				Managers/WeatherConditionCalculator.swift,
 				Managers/WeatherManager.swift,
+				Protocols/WeatherConditionCalculatorProtocol.swift,
+				Protocols/WeatherConditionManagerProtocol.swift,
 				Shared/WeatherConditionShared.swift,
 				Utils/Assets.xcassets,
 			);

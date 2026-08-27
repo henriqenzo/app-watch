@@ -14,7 +14,9 @@ class FreeRunViewModel: RunViewModelProtocol {
     var metricsWorkout = WorkoutMetrics()
     var sessionState: HKWorkoutSessionState = .notStarted
     var isAuthorized = false
-    var isRunning = true
+    var isRunning: Bool {
+        sessionState == .running
+    }
     var currentPace: Int?
     var paceFeedback: PaceFeedback?
     var targetPace: Int?
@@ -88,42 +90,43 @@ class FreeRunViewModel: RunViewModelProtocol {
 
     func startRunning() {
         workoutSessionManager.requestAuthorization()
-        
+
+        // Sessão limpa: managers são compartilhados entre treinos. Sem
+        // recálculo de cadência aqui — no livre o PPM é do usuário.
+        paceManager.reset()
+        strideManager.reset()
+
         Task { [workoutSessionManager] in
             await workoutSessionManager.startSession()
-            
-            if settingsStorage.isMetronomeEnabled {
+        }
+    }
+
+    func pauseResumeRunning() {
+        if isRunning {
+            workoutSessionManager.pauseSession()
+            if settingsStorage.isAudioEnabled || settingsStorage.isHapticEnabled {
+                metronomeManager.stop()
+            }
+        } else {
+            workoutSessionManager.resumeSession()
+            if settingsStorage.isAudioEnabled || settingsStorage.isHapticEnabled {
                 metronomeManager.start()
             }
         }
     }
 
-    func pauseResumeRunning() {
-        isRunning.toggle()
-    }
-
     func stopRunning() {
-        if isRunning {
-            print("Tem que pausar primeiro")
-        } else {
-            print("Treino finalizado")
+        if isRunning == false {
+            workoutSessionManager.endSession()
+            if settingsStorage.isAudioEnabled || settingsStorage.isHapticEnabled {
+                metronomeManager.stop()
+            }
         }
     }
 
     func editRunning() {
         print("Vai editar")
     }
-    
-    func toggleMetronome() {
-        metronomeManager.toggle()
-    }
-    
-    func incrementMetronome() {
-        metronomeManager.increment(by: 1)
-    }
-    
-    func decrementMetronome() {
-        metronomeManager.decrement(by: 1)
-    }
 
+    
 }

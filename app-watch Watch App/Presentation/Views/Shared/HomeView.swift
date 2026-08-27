@@ -8,143 +8,107 @@
 import Foundation
 import SwiftUI
 
-struct HomeView: View {
-    
-    @Environment(AppContainer.self) private var container
-    
-    @State private var showGoalView = false
-    @State private var showWeatherCondition = false
-    @State private var selectedTab = 0
-    @State private var viewModel = WeatherConditionViewModel()
-    @Environment(\.scenePhase) private var scenePhase
-    @State private var router = Router()
+enum RunType {
+    case guided
+    case free
+}
 
+struct HomeView: View {
+    @Environment(\.scenePhase) private var scenePhase
+    @Environment(RunFlowState.self) private var flow
+    
+    @State private var selectedTab = 0
     @State private var showSettingsView = false
+    @State private var weatherViewModel: WeatherConditionViewModel
+    
+    private let makeGuideRunViewModel: (Int?) -> GuideRunViewModel
+    private let makeFreeRunViewModel: () -> FreeRunViewModel
+    private let makeSettingsViewModel: () -> SettingsViewModel
+    
+    init(
+        weatherViewModel: WeatherConditionViewModel,
+        makeGuideRunViewModel: @escaping (Int?) -> GuideRunViewModel,
+        makeFreeRunViewModel: @escaping () -> FreeRunViewModel,
+        makeSettingsViewModel: @escaping () -> SettingsViewModel
+    ) {
+        _weatherViewModel = State(initialValue: weatherViewModel)
+        self.makeGuideRunViewModel = makeGuideRunViewModel
+        self.makeFreeRunViewModel = makeFreeRunViewModel
+        self.makeSettingsViewModel = makeSettingsViewModel
+    }
     
     var body: some View {
-        NavigationStack(path: $router.path) {
+        @Bindable var flow = flow
+        NavigationStack(path: $flow.path) {
             TabView(selection: $selectedTab) {
-                VStack(spacing: AppSizes.xmedium) {
-                    VStack(spacing: AppSizes.medium) {
-                        Image(systemName: "figure.run")
-                            .font(.title2)
-                            .background(
-                                Circle()
-                                    .fill(Color.brandPrimary.opacity(0.4))
-                                    .frame(width: 50, height: 50)
-                            )
-                        Text("Vamos correr?")
-                            .font(.headline)
-                            .fontWeight(.bold)
-                        
-                    }
-                    
-                    VStack(spacing: AppSizes.medium) {
-                        PrimaryButtonComponent(
-                            label: "Iniciar treino guiado",
-                            variantStyle: .primary
-                        ) {
-                            router.goTo(.goal)
-                        }
-                        
-                        PrimaryButtonComponent(
-                            label: "Iniciar treino livre",
-                            variantStyle: .secondary
-                            
-                        ) {
-                            
-                            
-                        }
-                        
-                    }
-                    .padding(.horizontal)
-                }
-                .tag(0)
-                
-                WeatherConditionContainerView(viewModel: viewModel)
-                    .tag(1)
-                
+                homeTab.tag(0)
+                WeatherConditionContainerView(viewModel: weatherViewModel).tag(1)
             }
             .tabViewStyle(.page)
-            .navigationDestination(for: Route.self) { route in
-                
-                switch route {
-                    
-                case .goal:
-                    GoalView()
-                    
-                case .selectPace:
-                    SelectPaceView()
-                case .selectDistance:
-                    SelectDistanceView()
-                case .startTraining:
-                    StartTrainingView()
-                case .liveRunView:
-                    LiveRunView(
-                        viewModel: container.makeGuideRunViewModel()
-                    )
-                    .toolbar(.hidden, for: .navigationBar)
-                    
-                case .finished:
-                    FinishedView{
-                        router.goTo(.summary)
-                    }
-                    .toolbar(.hidden, for: .navigationBar)
-                    
-                    
-                case .summary:
-                    SummaryView{
-                        router.goHome()
-                    }
-                    .navigationBarBackButtonHidden(true)
-                    
-                case .selectTime:
-                    SelectDurationView()
-                }
-                
+            .navigationDestination(for: RunFlowRoute.self) { route in
+                RunFlowDestinationView(
+                    route: route,
+                    makeGuideRunViewModel: makeGuideRunViewModel,
+                    makeFreeRunViewModel: makeFreeRunViewModel
+                )
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        showSettingsView = true
-                    } label: {
+                    Button { showSettingsView = true } label: {
                         Image(systemName: "gearshape.fill")
                     }
                 }
             }
             .sheet(isPresented: $showSettingsView) {
-                SettingsView(settingsViewModel: container.makeSettingsViewModel())
+                SettingsView(settingsViewModel: makeSettingsViewModel())
             }
         }
-            .navigationDestination(isPresented: $showWeatherCondition) {
-                WeatherConditionContainerView(viewModel: viewModel)
-            }
-            .onOpenURL { url in
-                guard url.scheme == "myapp", url.host == "weather" else { return }
-                selectedTab = 1
-            
-            
+        .onOpenURL { url in
+            guard url.scheme == "myapp", url.host == "weather" else { return }
+            selectedTab = 1
         }
-            
-        .task {
-            viewModel.requestWeather()
-        }
+        .task { weatherViewModel.requestWeather() }
         .onChange(of: scenePhase) { _, newPhase in
-            if newPhase == .active {
-                viewModel.requestWeather()
-            }
+            if newPhase == .active { weatherViewModel.requestWeather() }
         }
-        .environment(router)
+    }
+    
+    private var homeTab: some View {
+        VStack(spacing: AppSizes.xmedium) {
+            VStack(spacing: AppSizes.medium) {
+                Image(systemName: "figure.run")
+                    .font(.title2)
+                    .background(Circle().fill(Color.brandPrimary.opacity(0.4)).frame(width: 50, height: 50))
+                Text("Vamos correr?").font(.headline).fontWeight(.bold)
+            }
+            VStack(spacing: AppSizes.medium) {
+                PrimaryButtonComponent(label: "Iniciar treino guiado", variantStyle: .primary) {
+                    flow.type = .guided
+                    flow.goTo(.goal)
+                }
+                PrimaryButtonComponent(label: "Iniciar treino livre", variantStyle: .secondary) {
+                    flow.type = .free
+                    flow.goTo(.goal)
+                }
+            }
+            .padding(.horizontal)
+        }
     }
 }
 
 #Preview {
     struct PreviewWrapper: View {
         @State private var container = AppContainer()
-
+        
         var body: some View {
-            HomeView()
-                .environment(container)
+            HomeView(
+                weatherViewModel: container.makeWeatherConditionViewModel(),
+                makeGuideRunViewModel: {_ in 
+                    container.makeGuideRunViewModel()
+                },
+                makeFreeRunViewModel: container.makeFreeRunViewModel,
+                makeSettingsViewModel: container.makeSettingsViewModel
+            )
         }
     }
     return PreviewWrapper()

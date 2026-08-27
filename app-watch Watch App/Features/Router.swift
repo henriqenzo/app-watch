@@ -8,27 +8,32 @@
 import Foundation
 import SwiftUI
 
-enum Route: Hashable {
-    case goal
-    case selectPace
-    case selectDistance
-    case selectTime
-    case startTraining
-    case liveRunView
-    case finished
-    case summary
-}
-
 @Observable
-class Router {
+final class RunFlowState {
     var path = NavigationPath()
-    var isLiveRunPresented = false
     
-    func goTo(_ route: Route) {
+    var type: RunType?
+    var goal: GoalType?
+    var targetPace: Int?
+    var targetDistance: Double?
+    var targetTime: TimeInterval?
+    
+    enum GoalType {
+        case pace
+        case distanceAndTime
+    }
+    
+    func goTo(_ route: RunFlowRoute) {
         path.append(route)
     }
     
     func goHome() {
         path = NavigationPath()
+        type = nil
+        goal = nil
+        targetPace = nil
+        targetDistance = nil
+        targetTime = nil
     }
 }
+

@@ -7,21 +7,12 @@
 
 import SwiftUI
 
-enum Screen {
-    case running
-    case finished
-    case summary
-    
-}
+
 
 /// Tela exibida durante o treino em andamento. É compartilhada pelos dois
 /// modos (livre e guiado) — o que muda entre eles são os dados recebidos.
 struct LiveRunView: View {
-    @Environment(Router.self) private var router
     @State private var viewModel: RunViewModelProtocol
-    @State private var selectedPage = 1
-    @State private var screen: Screen = .running
-    @State private var goToHome = false
 
     init(viewModel: RunViewModelProtocol) {
             _viewModel = State(initialValue: viewModel)
@@ -82,23 +73,7 @@ struct LiveRunView: View {
 
     var body: some View {
         
-        TabView(selection: $selectedPage) {
-            
-            ControlGuideView(guideViewModel: viewModel)
-            
-            .tag(0)
-            runPage
-                .tag(1)
-            
-        }
-        
-        .tabViewStyle(.page)
-        
-        .task {
-            
-            viewModel.startRunning()
-            
-        }
+        runPage
         .toolbar(.hidden, for: .navigationBar)
         
     }
@@ -227,13 +202,14 @@ struct LiveRunView: View {
 // MARK: - Previews
 
 /// Monta um ViewModel sobre velocidades sintéticas: o simulador do watchOS não
-/// gera amostras de `.runningSpeed`.
-private func previewViewModel(speeds: [Double], targetPace: Int?) -> GuideRunViewModel {
+/// gera amostras de `.runningSpeed`. Interno ao módulo para ser reutilizado
+/// pelo preview do `GuideRunSessionView`.
+func previewViewModel(speeds: [Double], targetPace: Int?) -> GuideRunViewModel {
+    let hapticManager = HapticManager()
+    let metronomeManager = MetronomeManager(hapticManager: hapticManager)
     let sessionManager = MockWorkoutSessionManager(speeds: speeds)
     let paceManager = PaceManager(workoutSessionManager: sessionManager)
-    let hapticManager = HapticManager()
 
-    let metronomeManager = MetronomeManager(hapticManager: hapticManager)
     let strideManager = StrideManager(
         paceManager: paceManager,
         workoutSessionManager: sessionManager,
@@ -258,22 +234,24 @@ private func previewViewModel(speeds: [Double], targetPace: Int?) -> GuideRunVie
 }
 
 /// 5'30"/km no alvo → 6'02"/km (+0'32") → parado.
+/// O start é disparado aqui porque a view não inicia mais o treino sozinha —
+/// essa responsabilidade é do container (`GuideRunSessionView`).
 #Preview("Guiado · sai do pace") {
-    LiveRunView(
-        viewModel: previewViewModel(
-            speeds: Array(repeating: 3.03, count: 8)
-                + Array(repeating: 2.76, count: 12)
-                + Array(repeating: 0, count: 4),
-            targetPace: AppContainer.defaultTargetPace
-        )
+    let viewModel = previewViewModel(
+        speeds: Array(repeating: 3.03, count: 8)
+            + Array(repeating: 2.76, count: 12)
+            + Array(repeating: 0, count: 4),
+        targetPace: AppContainer.defaultTargetPace
     )
+    LiveRunView(viewModel: viewModel)
+        .task { viewModel.startRunning() }
 }
 
 #Preview("Livre · sem alvo") {
-    LiveRunView(
-        viewModel: previewViewModel(
-            speeds: Array(repeating: 3.03, count: 8),
-            targetPace: nil
-        )
+    let viewModel = previewViewModel(
+        speeds: Array(repeating: 3.03, count: 8),
+        targetPace: nil
     )
+    LiveRunView(viewModel: viewModel)
+        .task { viewModel.startRunning() }
 }

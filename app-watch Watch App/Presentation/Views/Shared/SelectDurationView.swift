@@ -8,29 +8,26 @@
 import SwiftUI
 
 struct SelectDurationView: View {
-    @Environment(Router.self) private var router
-
-    @State var hours: Int = 0
-    @State var minutes: Int = 0
+    @Environment(RunFlowState.self) private var flow
+    
+    @State private var hours: Int = 0
+    @State private var minutes: Int = 0
     
     var body: some View {
         VStack(alignment: .center) {
-            
             Text("Gire a coroa para selecionar")
                 .font(AppTypography.caption)
                 .foregroundStyle(.gray)
             
             PacePickerView(minutes: $hours, seconds: $minutes)
-            
             Spacer()
-            
         }
         .navigationTitle("Tempo")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    router.goTo(.startTraining)
-                    
+                    flow.targetTime = TimeInterval(hours * 3600 + minutes * 60)
+                    flow.goTo(.startTraining)
                 } label: {
                     Image(systemName: "checkmark")
                 }
@@ -38,9 +35,15 @@ struct SelectDurationView: View {
             }
         }
         .padding()
+        .onAppear {
+            guard let targetTime = flow.targetTime else { return }
+            hours = Int(targetTime) / 3600
+            minutes = (Int(targetTime) % 3600) / 60
+        }
     }
 }
 
 #Preview {
     SelectDurationView()
+        .environment(RunFlowState())
 }

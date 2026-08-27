@@ -11,11 +11,17 @@ import SwiftUI
 struct app_watch_Watch_AppApp: App {
     
     @State private var container = AppContainer()
-    
+    @State private var flow = RunFlowState()
+
     var body: some Scene {
-        WindowGroup {
-            HomeView()
-                .environment(container)
-        }
+            WindowGroup {
+                HomeView(
+                    weatherViewModel: container.makeWeatherConditionViewModel(),
+                    makeGuideRunViewModel: container.makeGuideRunViewModel,
+                    makeFreeRunViewModel: container.makeFreeRunViewModel,
+                    makeSettingsViewModel: container.makeSettingsViewModel
+                )
+                .environment(flow)
+            }
     }
 }
