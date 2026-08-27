@@ -99,6 +99,10 @@ class FreeRunViewModel: RunViewModelProtocol {
         Task { [workoutSessionManager] in
             await workoutSessionManager.startSession()
         }
+        
+        if settingsStorage.isAudioEnabled || settingsStorage.isHapticEnabled {
+            metronomeManager.start()
+        }
     }
 
     func pauseResumeRunning() {
