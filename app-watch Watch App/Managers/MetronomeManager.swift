@@ -18,6 +18,7 @@ final class MetronomeManager: MetronomeManagerProtocol {
         didSet {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
+                print("o ppm recebido é \(ppm)")
                 self.onPPMUpdate?(self.ppm)
             }
         }
@@ -125,7 +126,7 @@ final class MetronomeManager: MetronomeManagerProtocol {
         )
 
         guard ppm != clamped else { return }
-
+        print("O PPM dentro de updateBPM \(newValue)")
         ppm = clamped
         intervalNanoseconds = UInt64((60.0 / ppm) * 1_000_000_000)
 
