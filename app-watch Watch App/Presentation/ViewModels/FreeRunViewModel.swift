@@ -23,6 +23,7 @@ class FreeRunViewModel: RunViewModelProtocol {
     var isMetronomeRunning: Bool = false
     var metronomePPM: Double = 160
     var targetCadence: Int?
+    var averageCadence: Int?
 
     private var workoutSessionManager: WorkoutSessionManagerProtocol
     private var paceManager: PaceManagerProtocol
@@ -85,6 +86,7 @@ class FreeRunViewModel: RunViewModelProtocol {
 
         self.strideManager.onCadenceUpdate = { [weak self] reading in
             self?.targetCadence = reading.targetCadence
+            self?.averageCadence = reading.averageCadence
         }
     }
 

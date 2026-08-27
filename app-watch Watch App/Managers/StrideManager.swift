@@ -17,6 +17,8 @@ import Foundation
 /// vinda do HealthKit. No FreeRun (sem pace-alvo) o manager não toca no metrônomo:
 /// lá o PPM é definido manualmente pelo usuário.
 final class StrideManager: StrideManagerProtocol {
+    private(set) var averageCadence: Int?
+    
 
     private(set) var targetCadence: Int?
 
@@ -33,6 +35,10 @@ final class StrideManager: StrideManagerProtocol {
 
     /// Último PPM empurrado ao metrônomo — evita reiniciá-lo a cada tick de valor igual.
     private var lastPushedCadence: Int?
+    
+    private var totalPPM: Int = 0
+    private var ppmVariation: Int = 0
+    
 
     init(paceManager: PaceManagerProtocol,
          workoutSessionManager: WorkoutSessionManagerProtocol,
@@ -71,9 +77,10 @@ final class StrideManager: StrideManagerProtocol {
             if cadence != lastPushedCadence {
                 lastPushedCadence = cadence
                 metronomeManager.updateBPM(Double(cadence))
+                averagePPMCalculator(cadence: cadence)
             }
         }
-
+       
         emitReading()
     }
 
@@ -81,7 +88,7 @@ final class StrideManager: StrideManagerProtocol {
     private func cadence(forPace pace: Int?, strideLength: Double) -> Int? {
         guard let pace else { return nil }
         guard pace > 0 else { return nil }
-        var cadence = Int((60_000 / (Double(pace) * strideLength)).rounded())
+        let cadence = Int((60_000 / (Double(pace) * strideLength)).rounded())
         print("O cadence é: \(cadence)")
         return cadence
     }
@@ -89,12 +96,20 @@ final class StrideManager: StrideManagerProtocol {
     private func emitReading() {
         let reading = CadenceReading(
             targetCadence: targetCadence,
-            strideLength: strideLength
+            strideLength: strideLength,
+            averageCadence: averageCadence
         )
         print("O resultado de PPM é \(reading)")
 
         DispatchQueue.main.async { [weak self] in
             self?.onCadenceUpdate?(reading)
         }
+    }
+    
+    private func averagePPMCalculator(cadence: Int) {
+        ppmVariation += 1
+        totalPPM += cadence
+
+        averageCadence = totalPPM / ppmVariation
     }
 }
