@@ -18,6 +18,8 @@ final class AppContainer {
     let strideManager: StrideManagerProtocol
     let hapticManager: HapticManagerProtocol
     let metronomeManager: MetronomeManagerProtocol
+    let weatherManager: WeatherManagerProtocol
+    let weatherConditionCalculator: WeatherConditionCalculatorProtocol
 
     init() {
         self.settingsStorage = SettingsStorage()
@@ -30,6 +32,8 @@ final class AppContainer {
             workoutSessionManager: workoutSessionManager,
             metronomeManager: metronomeManager
         )
+        self.weatherManager = WeatherManager()
+        self.weatherConditionCalculator = WeatherConditionCalculator()
     }
 
     func makeFreeRunViewModel() -> FreeRunViewModel {
@@ -57,5 +61,12 @@ final class AppContainer {
     
     func makeSettingsViewModel() -> SettingsViewModel {
         return SettingsViewModel(settingsStorage: settingsStorage)
+    }
+    
+    func makeWeatherConditionViewModel() -> WeatherConditionViewModel {
+        return WeatherConditionViewModel(
+            weatherManager: weatherManager,
+            calculator: weatherConditionCalculator
+        )
     }
 }

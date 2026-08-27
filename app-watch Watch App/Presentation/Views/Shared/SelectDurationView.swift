@@ -29,7 +29,7 @@ struct SelectDurationView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    //router.goTo(.startTraining)
+                    router.goTo(.startTraining)
                     
                 } label: {
                     Image(systemName: "checkmark")

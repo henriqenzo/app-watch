@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct ControlGuideView: View {
-    
+    @Environment(Router.self) private var router
+
     @State private var guideViewModel: RunViewModelProtocol
 
     init(guideViewModel: RunViewModelProtocol) {
@@ -25,9 +26,12 @@ struct ControlGuideView: View {
             ControllCellComponent(
                 title: "Encerrar",
                 variant: guideViewModel.isRunning ? .deactive : .stop,
-                action: guideViewModel.stopRunning
+                action: {
+                         guideViewModel.stopRunning()
+                        router.goTo(.finished)
+                    
+                }
             )
-
         }
     }
 }

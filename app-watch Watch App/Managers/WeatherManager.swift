@@ -7,12 +7,12 @@
 
 
 import Foundation
-import WeatherKit
 import CoreLocation
+import WeatherKit
 
 // MARK: - WeatherManager
 // Responsável por buscar os dados do clima
-struct WeatherManager {
+struct WeatherManager: WeatherManagerProtocol{
     // Serviço do WeatherKit responsável por consultar os dados meteorológicos.
     private let service = WeatherService()
     

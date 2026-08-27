@@ -11,8 +11,13 @@ import WeatherKit
 import CoreLocation
 
 struct WeatherConditionContainerView: View {
-    var viewModel: WeatherConditionViewModel
-
+    
+    @State private var viewModel: WeatherConditionViewModel
+    
+    init(viewModel: WeatherConditionViewModel) {
+        _viewModel = State(initialValue: viewModel)
+    }
+    
     var body: some View {
         Group {
             if let temperature = viewModel.temperature {

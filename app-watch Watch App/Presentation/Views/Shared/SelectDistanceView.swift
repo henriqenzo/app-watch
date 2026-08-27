@@ -27,7 +27,7 @@ struct SelectDistanceView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    //                    router.goTo(.selectTime)
+                    router.goTo(.selectTime)
                     
                 } label: {
                     Image(systemName: "checkmark")

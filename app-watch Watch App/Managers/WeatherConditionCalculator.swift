@@ -31,7 +31,7 @@ private enum Thresholds {
 
 // MARK: - WeatherConditionCalculator
 // Realiza os calculos para definir o clima atual para corrida
-struct WeatherConditionCalculator {
+struct WeatherConditionCalculator: WeatherConditionCalculatorProtocol {
     
     // MARK: - Evaluate: Responsável por definir Avalia as condições climáticas em ordem de prioridade
     // Retorna a primeira condição identificada.
@@ -74,43 +74,6 @@ struct WeatherConditionCalculator {
             return nil
         }
     }
-    
-//    // MARK: - Avalia a condicao de calor
-//    private func evaluateHeat(_ weather: CurrentWeather) -> WeatherCondition? {
-//        // Pega a temperatura aparente e converte pra celsius
-//        let apparent = weather.apparentTemperature.converted(to: .celsius).value
-//        // Pega a hora atual do sistema
-//        let hour = Calendar.current.component(.hour, from: Date())
-//        
-//        // Verifica se a hora atual é um horario de pico de calor
-//        let isPeakHour = Thresholds.peakSunHours.contains(hour)
-//        // Verifica se o nivel de raios uv é maior que que o limite definido
-//        let isHighUV = Double(weather.uvIndex.value) >= Thresholds.highUV
-//        // define como um agravente se for um horario de pixo e um nivel alto de raios uv
-//        let isSunAggravated = isPeakHour || isHighUV
-//        
-//        // Se a temperatura aparente fr maior que o limite definido
-//        if apparent >= Thresholds.extremeHeatApparent {
-//            // Retorna calor extremo
-//            return .extremeHeat
-//        }
-//        
-//        // Se for um agravante e temepratura aparente maior que o limite definido
-//        if isSunAggravated && apparent >= Thresholds.sunAggravatedApparentThreshold {
-//            // Retorna extremamente quente
-//            return .extremeHeat
-//        }
-//        
-//        // Se a temperatura aparente for maior que o limite definido
-//        if apparent >= Thresholds.hotApparent {
-//            
-//            //retorna quente
-//            return .hot
-//        }
-//        
-//        // Se nenhuma condicao for atendida, retorna nil
-//        return nil
-//    }
     
     
     private func evaluateHeat(_ weather: CurrentWeather) -> WeatherCondition? {

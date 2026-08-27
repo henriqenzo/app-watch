@@ -12,18 +12,23 @@ import CoreLocation
 import WidgetKit
 
 @Observable
-final class WeatherConditionViewModel: NSObject, CLLocationManagerDelegate {
+final class WeatherConditionViewModel: NSObject, WeatherConditionViewModelProtocol, CLLocationManagerDelegate {
     private(set) var temperature: Int?
     private(set) var condition: WeatherCondition = .good
     private(set) var errorMessage: String?
     private(set) var isLoading = false
     
-    private let weatherManager: WeatherManager
-    private let calculator = WeatherConditionCalculator()
+    private let weatherManager: WeatherManagerProtocol
+    private let calculator: WeatherConditionCalculatorProtocol
     private let locationManager = CLLocationManager()
     
-    init(weatherManager: WeatherManager = WeatherManager()) {
+    init(
+        weatherManager: WeatherManagerProtocol,
+        calculator: WeatherConditionCalculatorProtocol
+    ) {
         self.weatherManager = weatherManager
+        self.calculator = calculator
+        
         super.init()
         locationManager.delegate = self
     }
