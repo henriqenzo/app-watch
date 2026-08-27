@@ -18,6 +18,7 @@ enum GoalPickerMode {
     case pace(minutes: Binding<Int>, seconds: Binding<Int>)
     case distance(meters: Binding<Double>, unit: Binding<DistanceUnit>)
     case duration(hours: Binding<Int>, minutes: Binding<Int>)
+    case ppm(value: Binding<Int>)
 }
 
 struct CustomPickerView: View {
@@ -38,6 +39,8 @@ struct CustomPickerView: View {
                 DistancePickerView(meters: meters, unit: unit)
             case .duration(let hours, let minutes):
                 DurationPickerView(hours: hours, minutes: minutes)
+            case .ppm(let value):
+                PPMPickerView(ppm: value)
             }
         }
     }
