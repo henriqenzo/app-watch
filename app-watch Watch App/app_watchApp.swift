@@ -14,9 +14,8 @@ struct app_watch_Watch_AppApp: App {
     
     var body: some Scene {
         WindowGroup {
-//            HomeView()
-//                .environment(container)
-            ContentView()
+            HomeView()
+                .environment(container)
         }
     }
 }

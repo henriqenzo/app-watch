@@ -28,8 +28,4 @@ protocol RunViewModelProtocol: AnyObject {
     func pauseResumeRunning()
     func stopRunning()
     func editRunning()
-    
-    func toggleMetronome()
-    func incrementMetronome()
-    func decrementMetronome()
 }
