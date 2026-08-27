@@ -64,8 +64,13 @@ struct HomeView: View {
             }
         }
         .onOpenURL { url in
+            
             guard url.scheme == "myapp", url.host == "weather" else { return }
+            
+            flow.path = NavigationPath()
+            
             selectedTab = 1
+            
         }
         .task { weatherViewModel.requestWeather() }
         .onChange(of: scenePhase) { _, newPhase in

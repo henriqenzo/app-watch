@@ -53,7 +53,10 @@ class GuideRunViewModel: RunViewModelProtocol {
         self.paceManager.targetPace = targetPace
 
         self.workoutSessionManager.onMetricsUpdate = { [weak self] metrics in
-            self?.metricsWorkout = metrics
+            guard let self else { return }
+            var updatedMetrics = metrics
+            updatedMetrics.duration = self.metricsWorkout.duration
+            self.metricsWorkout = updatedMetrics
         }
 
         self.workoutSessionManager.onElapsedTimeUpdate = {

@@ -22,6 +22,8 @@ struct GuideRunSessionView: View {
                 .tag(0)
             ControlGuideView(guideViewModel: viewModel)
                 .tag(1)
+                .toolbar(.hidden, for: .navigationBar)
+
 
         }
         .tabViewStyle(.page)

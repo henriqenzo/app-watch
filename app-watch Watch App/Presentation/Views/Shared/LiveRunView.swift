@@ -66,6 +66,7 @@ struct LiveRunView: View {
                     .padding(.top, AppSizes.medium)
             }
             .padding(.horizontal, AppSizes.small)
+            
         }
     }
 
@@ -73,6 +74,8 @@ struct LiveRunView: View {
         
         runPage
         .toolbar(.hidden, for: .navigationBar)
+        .padding(.vertical)
+
         
     }
     
@@ -118,10 +121,10 @@ struct LiveRunView: View {
                 .foregroundStyle(Color.textDisable)
 
             Text(pace)
-                .font(AppTypography.largeTitle)
+                .font(AppTypography.title1)
                 .foregroundStyle(Color.brandPrimary)
                 .lineLimit(1)
-                .minimumScaleFactor(0.85)
+                .frame(width: 70)
                 .layoutPriority(1)
 
             if let targetPace {

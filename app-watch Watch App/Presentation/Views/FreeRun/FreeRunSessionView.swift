@@ -22,6 +22,8 @@ struct FreeRunSessionView: View {
                 .tag(0)
             ControlFreeView(freeViewModel: viewModel)
                 .tag(1)
+                .toolbar(.hidden, for: .navigationBar)
+
         }
         .tabViewStyle(.page)
         .background(Color.background.ignoresSafeArea())

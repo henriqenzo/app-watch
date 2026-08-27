@@ -27,6 +27,7 @@ struct SelectDurationView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     flow.targetTime = TimeInterval(hours * 3600 + minutes * 60)
+                    flow.deriveTargetPaceFromDistanceAndTime()
                     flow.goTo(.startTraining)
                 } label: {
                     Image(systemName: "checkmark")
@@ -41,6 +42,11 @@ struct SelectDurationView: View {
             minutes = (Int(targetTime) % 3600) / 60
         }
     }
+}
+
+#Preview {
+    SelectDurationView()
+        .environment(RunFlowState())
 }
 
 #Preview {

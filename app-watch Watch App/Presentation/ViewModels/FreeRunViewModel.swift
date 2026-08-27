@@ -51,7 +51,10 @@ class FreeRunViewModel: RunViewModelProtocol {
         self.paceManager.targetPace = nil
         
         self.workoutSessionManager.onMetricsUpdate = { [weak self] metrics in
-            self?.metricsWorkout = metrics
+            guard let self else { return }
+            var updatedMetrics = metrics
+            updatedMetrics.duration = self.metricsWorkout.duration
+            self.metricsWorkout = updatedMetrics
         }
         
         self.workoutSessionManager.onElapsedTimeUpdate = { [weak self] elapsedTime in

@@ -35,5 +35,18 @@ final class RunFlowState {
         targetDistance = nil
         targetTime = nil
     }
+    
+    func deriveTargetPaceFromDistanceAndTime() {
+        guard let targetDistance,
+              targetDistance > 0,
+              let targetTime else { return }
+        
+        
+        let km = targetDistance / 1000
+        let paceInSeconds = targetTime / km
+        let paceInMinutes = paceInSeconds / 60
+        
+        targetPace = Int(paceInMinutes.rounded())
+    }
 }
 

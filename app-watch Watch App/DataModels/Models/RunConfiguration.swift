@@ -12,7 +12,8 @@ struct RunFlowDestinationView: View {
     let route: RunFlowRoute
     let makeGuideRunViewModel: (Int?) -> GuideRunViewModel
     let makeFreeRunViewModel: () -> FreeRunViewModel
-    
+    @State private var sessionViewModel: RunViewModelProtocol?
+
     @Environment(RunFlowState.self) private var flow
     
     var body: some View {
@@ -26,7 +27,7 @@ struct RunFlowDestinationView: View {
         case .selectTime:
             SelectDurationView()
         case .startTraining:
-            StartTrainingView(targetPace: 100)
+            StartTrainingView()
         case .liveRun:
             liveRunView
         case .finished:
@@ -40,15 +41,23 @@ struct RunFlowDestinationView: View {
     
     @ViewBuilder
     private var liveRunView: some View {
-        switch flow.type {
-        case .guided:
-            GuideRunSessionView(viewModel: makeGuideRunViewModel(flow.targetPace))
-                .toolbar(.hidden, for: .navigationBar)
-        case .free:
-            FreeRunSessionView(viewModel: makeFreeRunViewModel())
-                .toolbar(.hidden, for: .navigationBar)
-        case .none:
-            EmptyView()
+        if let sessionViewModel {
+            switch flow.type {
+            case .guided:
+                GuideRunSessionView(viewModel: sessionViewModel)
+            case .free:
+                FreeRunSessionView(viewModel: sessionViewModel)
+            case .none:
+                EmptyView()
+            }
+        } else {
+            Color.clear.onAppear {
+                switch flow.type {
+                case .guided: sessionViewModel = makeGuideRunViewModel(flow.targetPace)
+                case .free: sessionViewModel = makeFreeRunViewModel()
+                case .none: break
+                }
+            }
         }
     }
 }
