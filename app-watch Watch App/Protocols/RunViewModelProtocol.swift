@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-protocol RunViewModelProtocol: AnyObject {
+protocol RunViewModelProtocol: AnyObject, Observable {
     var metricsWorkout: WorkoutMetrics { get }
     var sessionState: HKWorkoutSessionState { get }
     var isAuthorized: Bool { get }
@@ -23,9 +23,9 @@ protocol RunViewModelProtocol: AnyObject {
     var metronomePPM: Double { get }
     /// Cadência alvo (ideal) calculada no GuideRun. `nil` no FreeRun.
     var targetCadence: Int? { get }
+    var averageCadence: Int? { get }
 
     func startRunning()
     func pauseResumeRunning()
     func stopRunning()
-    func editRunning()
 }

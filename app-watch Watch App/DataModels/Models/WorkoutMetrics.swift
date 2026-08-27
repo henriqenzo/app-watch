@@ -17,5 +17,4 @@ struct WorkoutMetrics {
     var runningSpeed: Double = 0.0
     var pace: Int = 0
     var duration: TimeInterval = 0
-    
 }

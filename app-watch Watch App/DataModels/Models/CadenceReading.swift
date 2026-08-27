@@ -15,6 +15,8 @@ struct CadenceReading: Equatable {
 
     /// Comprimento da passada usado no cálculo, em metros.
     let strideLength: Double?
+    
+    let averageCadence: Int?
 
-    static let empty = CadenceReading(targetCadence: nil, strideLength: nil)
+    static let empty = CadenceReading(targetCadence: nil, strideLength: nil, averageCadence: nil)
 }

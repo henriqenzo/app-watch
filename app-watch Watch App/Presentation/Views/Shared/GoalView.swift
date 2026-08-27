@@ -9,7 +9,8 @@ import Foundation
 import SwiftUI
 
 struct GoalView: View {
-    @State private var selectedGoal = 0
+    @Environment(RunFlowState.self) private var flow
+    
     var body: some View {
         VStack(alignment: .leading) {
             Text("Defina sua meta")
@@ -17,13 +18,37 @@ struct GoalView: View {
                 .fontWeight(.bold)
                 .padding(.top)
             
-            SelectCardComponent(title: "Pace alvo", subtitle: "Defina um pace constante", selected: selectedGoal == 0, action: {
-                selectedGoal = 0
-            })
+            SelectCardComponent(
+                title: "Pace alvo",
+                subtitle: "Defina um pace constante",
+                selected: flow.goal == .pace,
+                action: {
+                    flow.goal = .pace
+                    
+                    DispatchQueue.main.async {
+                        flow.goTo(.selectPace)
+                    }
+                }
+            )
             
-            SelectCardComponent(icon: "metronome.fill", title: "Distância e tempo", subtitle: "Defina uma distância e tempo alvo", selected: selectedGoal == 1, action: {
-                selectedGoal = 1
-            })
+            SelectCardComponent(
+                icon: "metronome.fill",
+                title: "Distância e tempo",
+                subtitle: "Defina uma distância e tempo alvo",
+                selected: flow.goal == .distanceAndTime,
+                action: {
+                    flow.goal = .distanceAndTime
+                    
+                    DispatchQueue.main.async {
+                        flow.goTo(.selectDistance)
+                    }
+                }
+            )
+        }
+        .onAppear {
+            
+            flow.goal = .pace
+            
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal)
@@ -32,4 +57,5 @@ struct GoalView: View {
 
 #Preview {
     GoalView()
+        .environment(RunFlowState())
 }

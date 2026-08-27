@@ -23,6 +23,7 @@ class GuideRunViewModel: RunViewModelProtocol {
     var isMetronomeRunning: Bool = false
     var metronomePPM: Double = 160
     var targetCadence: Int?
+    var averageCadence: Int?
     
     
 
@@ -53,7 +54,10 @@ class GuideRunViewModel: RunViewModelProtocol {
         self.paceManager.targetPace = targetPace
 
         self.workoutSessionManager.onMetricsUpdate = { [weak self] metrics in
-            self?.metricsWorkout = metrics
+            guard let self else { return }
+            var updatedMetrics = metrics
+            updatedMetrics.duration = self.metricsWorkout.duration
+            self.metricsWorkout = updatedMetrics
         }
 
         self.workoutSessionManager.onElapsedTimeUpdate = {
@@ -92,19 +96,24 @@ class GuideRunViewModel: RunViewModelProtocol {
 
         self.strideManager.onCadenceUpdate = { [weak self] reading in
             self?.targetCadence = reading.targetCadence
+            self?.averageCadence = reading.averageCadence
         }
     }
 
     func startRunning() {
-        workoutSessionManager.requestAuthorization()
-
-        // Sessão limpa (managers são compartilhados entre treinos) e cadência
-        // alvo semeada com a passada default, antes da 1ª amostra do HealthKit.
-        paceManager.reset()
-        strideManager.reset()
-        strideManager.recalculateCadence()
-
-        Task { [workoutSessionManager] in
+        Task { [weak self] in
+            guard let self else { return }
+            
+            workoutSessionManager.requestAuthorization()
+            
+            while !isAuthorized {
+                try? await Task.sleep(for: .milliseconds(200))
+            }
+            
+            paceManager.reset()
+            strideManager.reset()
+            strideManager.recalculateCadence()
+            
             await workoutSessionManager.startSession()
         }
         
@@ -141,9 +150,10 @@ class GuideRunViewModel: RunViewModelProtocol {
             print("Treino encerrado")
         }
     }
-
-    func editRunning() {
-        print("Vai editar")
-    }
+    
+//    func showMetrics(){
+//        workoutSessionManager.endSession()
+//        print(metricsWorkout)
+//    }
 
 }

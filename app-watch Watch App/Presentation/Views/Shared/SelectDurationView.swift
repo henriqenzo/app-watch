@@ -8,48 +8,48 @@
 import SwiftUI
 
 struct SelectDurationView: View {
+    @Environment(RunFlowState.self) private var flow
     
-    @State var hours: Int = 0
-    @State var minutes: Int = 0
+    @State private var hours: Int = 0
+    @State private var minutes: Int = 0
     
     var body: some View {
-        VStack {
-            VStack(spacing: 2) {
-                Text("Duração")
-                    .textCase(.uppercase)
-                    .font(.system(size: 11, weight: .semibold))
-                    .foregroundStyle(.pink)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                
-                Text("Gire a coroa para selecionar")
-                    .font(.system(size: 10))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .foregroundStyle(.gray)
-            }
+        VStack(alignment: .center) {
+            Text("Gire a coroa para selecionar")
+                .font(AppTypography.caption)
+                .foregroundStyle(.gray)
             
+            PacePickerView(minutes: $hours, seconds: $minutes)
             Spacer()
-            
-            DurationPickerView(hours: $hours, minutes: $minutes)
-                .scaleEffect(0.7)
-            
-            Spacer()
-            
-            Button(action: {
-                // continue
-            }) {
-                Text("Continuar")
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(.black)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 35)
-                    .background(.pink)
-                    .cornerRadius(12)
+        }
+        .navigationTitle("Tempo")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    flow.targetTime = TimeInterval(hours * 3600 + minutes * 60)
+                    flow.deriveTargetPaceFromDistanceAndTime()
+                    flow.goTo(.startTraining)
+                } label: {
+                    Image(systemName: "checkmark")
+                }
+                .tint(.brandPrimary)
             }
-            .buttonStyle(.plain)
+        }
+        .padding()
+        .onAppear {
+            guard let targetTime = flow.targetTime else { return }
+            hours = Int(targetTime) / 3600
+            minutes = (Int(targetTime) % 3600) / 60
         }
     }
 }
 
 #Preview {
     SelectDurationView()
+        .environment(RunFlowState())
+}
+
+#Preview {
+    SelectDurationView()
+        .environment(RunFlowState())
 }

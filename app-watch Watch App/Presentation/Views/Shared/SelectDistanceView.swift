@@ -8,48 +8,43 @@
 import SwiftUI
 
 struct SelectDistanceView: View {
+    @Environment(RunFlowState.self) private var flow
     
-    @State var meters: Double = 0
-    @State var unit: DistanceUnit = .kilometers
+    @State private var meters: Double = 0
+    @State private var unit: DistanceUnit = .kilometers
     
     var body: some View {
-        VStack {
-            VStack(spacing: 2) {
-                Text("Distância")
-                    .textCase(.uppercase)
-                    .font(.system(size: 11, weight: .semibold))
-                    .foregroundStyle(.pink)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                
-                Text("Gire a coroa para selecionar")
-                    .font(.system(size: 10))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .foregroundStyle(.gray)
-            }
-            
-            Spacer()
+        VStack(alignment: .center) {
+            Text("Gire a coroa para selecionar")
+                .font(AppTypography.caption)
+                .foregroundStyle(.gray)
             
             DistancePickerView(meters: $meters, unit: $unit)
-                .scaleEffect(0.8)
-            
             Spacer()
-            
-            Button(action: {
-                // continue
-            }) {
-                Text("Continuar")
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(.black)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 35)
-                    .background(.pink)
-                    .cornerRadius(12)
+        }
+        .navigationTitle("Distância")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    flow.targetDistance = meters
+                    flow.goTo(.selectTime)
+                } label: {
+                    Image(systemName: "checkmark")
+                }
+                .tint(.brandPrimary)
             }
-            .buttonStyle(.plain)
+        }
+        .padding()
+        .onAppear {
+            guard let targetDistance = flow.targetDistance else { return }
+            meters = targetDistance
         }
     }
 }
 
 #Preview {
     SelectDistanceView()
+        .environment(RunFlowState())
 }
+
+

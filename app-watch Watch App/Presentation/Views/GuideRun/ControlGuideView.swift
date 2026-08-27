@@ -8,13 +8,14 @@
 import SwiftUI
 
 struct ControlGuideView: View {
+    @Environment(RunFlowState.self) private var flow
     
     @State private var guideViewModel: RunViewModelProtocol
-
+    
     init(guideViewModel: RunViewModelProtocol) {
         _guideViewModel = State(initialValue: guideViewModel)
     }
-
+    
     var body: some View {
         HStack(spacing: AppSizes.xlarge) {
             ControllCellComponent(
@@ -25,9 +26,12 @@ struct ControlGuideView: View {
             ControllCellComponent(
                 title: "Encerrar",
                 variant: guideViewModel.isRunning ? .deactive : .stop,
-                action: guideViewModel.stopRunning
+                action: {
+                    guideViewModel.stopRunning()
+                    flow.goTo(.finished)
+                    
+                }
             )
-
         }
     }
 }
@@ -35,9 +39,10 @@ struct ControlGuideView: View {
 #Preview {
     struct PreviewWrapper: View {
         @State private var container = AppContainer()
-
+        
         var body: some View {
             ControlGuideView(guideViewModel: container.makeGuideRunViewModel())
+                .environment(RunFlowState())
         }
     }
     return PreviewWrapper()

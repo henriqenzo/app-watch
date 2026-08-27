@@ -23,6 +23,7 @@ class FreeRunViewModel: RunViewModelProtocol {
     var isMetronomeRunning: Bool = false
     var metronomePPM: Double = 160
     var targetCadence: Int?
+    var averageCadence: Int?
 
     private var workoutSessionManager: WorkoutSessionManagerProtocol
     private var paceManager: PaceManagerProtocol
@@ -31,6 +32,8 @@ class FreeRunViewModel: RunViewModelProtocol {
 
     private var hapticManager: HapticManagerProtocol
     private var settingsStorage: SettingsStorageProtocol
+
+    private var isEditingGoals = false
     
     init(
         workoutSessionManager: WorkoutSessionManagerProtocol,
@@ -51,7 +54,10 @@ class FreeRunViewModel: RunViewModelProtocol {
         self.paceManager.targetPace = nil
         
         self.workoutSessionManager.onMetricsUpdate = { [weak self] metrics in
-            self?.metricsWorkout = metrics
+            guard let self else { return }
+            var updatedMetrics = metrics
+            updatedMetrics.duration = self.metricsWorkout.duration
+            self.metricsWorkout = updatedMetrics
         }
         
         self.workoutSessionManager.onElapsedTimeUpdate = { [weak self] elapsedTime in
@@ -69,7 +75,12 @@ class FreeRunViewModel: RunViewModelProtocol {
         self.paceManager.onPaceUpdate = { [weak self] reading in
             self?.currentPace = reading.secondsPerKm
             self?.paceFeedback = reading.feedback
-            
+
+            guard self?.isEditingGoals != true else {
+                self?.isEditingGoals = false
+                return
+            }
+
             if self?.settingsStorage.isPaceAlertEnabled == true && self?.paceFeedback != .onTarget {
                 self?.hapticManager.playWarning()
             }
@@ -85,6 +96,7 @@ class FreeRunViewModel: RunViewModelProtocol {
 
         self.strideManager.onCadenceUpdate = { [weak self] reading in
             self?.targetCadence = reading.targetCadence
+            self?.averageCadence = reading.averageCadence
         }
     }
 
@@ -128,8 +140,14 @@ class FreeRunViewModel: RunViewModelProtocol {
         }
     }
 
-    func editRunning() {
-        print("Vai editar")
+    func updateGoals(paceMinutes: Int, paceSeconds: Int, ppm: Int) {
+        isEditingGoals = true
+
+        let newPace = paceMinutes * 60 + paceSeconds
+        targetPace = newPace > 0 ? newPace : nil
+        paceManager.targetPace = targetPace
+
+        metronomeManager.updateBPM(Double(ppm))
     }
 
     

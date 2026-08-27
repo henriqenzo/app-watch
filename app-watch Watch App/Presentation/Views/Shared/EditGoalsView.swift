@@ -57,9 +57,9 @@ struct EditGoalsView: View {
                 Button(action: confirm) {
                     Image(systemName: "checkmark")
                         .font(.system(size: 13, weight: .semibold))
-                        .foregroundStyle(hasChanges ? .pink : .gray.opacity(0.4))
                 }
                 .disabled(!hasChanges)
+                .tint(hasChanges ? Color("brandSecondaryColor") : .gray.opacity(0.4))
             }
         }
     }
@@ -72,7 +72,7 @@ struct EditGoalsView: View {
                 Text("Editar - Pace alvo")
                     .textCase(.uppercase)
                     .font(.system(size: 11, weight: .semibold))
-                    .foregroundStyle(.pink)
+                    .foregroundStyle(Color("brandSecondaryColor"))
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Text("Gire a coroa para selecionar")
@@ -101,7 +101,7 @@ struct EditGoalsView: View {
                 Text("Editar - PPM")
                     .textCase(.uppercase)
                     .font(.system(size: 11, weight: .semibold))
-                    .foregroundStyle(.pink)
+                    .foregroundStyle(Color("brandSecondaryColor"))
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Text("Gire a coroa para selecionar")
