@@ -23,6 +23,7 @@ class GuideRunViewModel: RunViewModelProtocol {
     var isMetronomeRunning: Bool = false
     var metronomePPM: Double = 160
     var targetCadence: Int?
+    var averageCadence: Int?
     
     
 
@@ -92,6 +93,7 @@ class GuideRunViewModel: RunViewModelProtocol {
 
         self.strideManager.onCadenceUpdate = { [weak self] reading in
             self?.targetCadence = reading.targetCadence
+            self?.averageCadence = reading.averageCadence
         }
     }
 
@@ -145,5 +147,10 @@ class GuideRunViewModel: RunViewModelProtocol {
     func editRunning() {
         print("Vai editar")
     }
+    
+//    func showMetrics(){
+//        workoutSessionManager.endSession()
+//        print(metricsWorkout)
+//    }
 
 }
