@@ -106,24 +106,20 @@ class GuideRunViewModel: RunViewModelProtocol {
 
         Task { [workoutSessionManager] in
             await workoutSessionManager.startSession()
-
-            if settingsStorage.isMetronomeEnabled {
-                metronomeManager.start()
-            }
         }
     }
 
     func pauseResumeRunning() {
         if isRunning {
             workoutSessionManager.pauseSession()
-            if settingsStorage.isMetronomeEnabled {
+            if settingsStorage.isAudioEnabled || settingsStorage.isHapticEnabled {
                 metronomeManager.stop()
             }
 
             print("Pausa treino")
         } else {
             workoutSessionManager.resumeSession()
-            if settingsStorage.isMetronomeEnabled {
+            if settingsStorage.isAudioEnabled || settingsStorage.isHapticEnabled {
                 metronomeManager.start()
             }
 
@@ -135,7 +131,7 @@ class GuideRunViewModel: RunViewModelProtocol {
     func stopRunning() {
         if isRunning == false {
             workoutSessionManager.endSession()
-            if settingsStorage.isMetronomeEnabled {
+            if settingsStorage.isAudioEnabled || settingsStorage.isHapticEnabled {
                 metronomeManager.stop()
             }
             print("Treino encerrado")

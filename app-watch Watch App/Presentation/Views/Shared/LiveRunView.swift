@@ -212,8 +212,6 @@ func previewViewModel(speeds: [Double], targetPace: Int?) -> GuideRunViewModel {
         workoutSessionManager: sessionManager,
         metronomeManager: metronomeManager
     )
-    
-    
     let settingsStorage = SettingsStorage()
 
     paceManager.onFeedbackChange = { reading in

@@ -12,9 +12,9 @@ class SettingsViewModel: SettingsViewModelProtocol {
     
     private var settingsStorage: SettingsStorageProtocol
     
-    var isMetronomeEnabled: Bool {
+    var isHapticEnabled: Bool {
         didSet {
-            settingsStorage.isMetronomeEnabled = isMetronomeEnabled
+            settingsStorage.isHapticEnabled = isHapticEnabled
         }
     }
     
@@ -32,7 +32,7 @@ class SettingsViewModel: SettingsViewModelProtocol {
     
     init(settingsStorage: SettingsStorageProtocol) {
         self.settingsStorage = settingsStorage
-        self.isMetronomeEnabled = settingsStorage.isMetronomeEnabled
+        self.isHapticEnabled = settingsStorage.isHapticEnabled
         self.isAudioEnabled = settingsStorage.isAudioEnabled
         self.isPaceAlertEnabled = settingsStorage.isPaceAlertEnabled
     }

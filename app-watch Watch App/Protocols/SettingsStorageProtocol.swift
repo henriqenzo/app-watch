@@ -6,7 +6,7 @@
 //
 
 protocol SettingsStorageProtocol {
-    var isMetronomeEnabled: Bool { get set }
+    var isHapticEnabled: Bool { get set }
     var isAudioEnabled: Bool { get set }
     var isPaceAlertEnabled: Bool { get set }
 }
