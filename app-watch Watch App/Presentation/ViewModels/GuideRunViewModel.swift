@@ -150,10 +150,6 @@ class GuideRunViewModel: RunViewModelProtocol {
             print("Treino encerrado")
         }
     }
-
-    func editRunning() {
-        print("Vai editar")
-    }
     
 //    func showMetrics(){
 //        workoutSessionManager.endSession()
