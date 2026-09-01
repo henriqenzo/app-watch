@@ -4,7 +4,7 @@
 <dict>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.com.deboraferreira.app-watch.app-groups</string>
+		<string>group.br.com.crono.watchapp</string>
 	</array>
 </dict>
 </plist>
