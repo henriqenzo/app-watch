@@ -23,7 +23,7 @@ struct LastLocation: Codable {
 }
 
 final class WeatherConditionShared {
-    static let defaultsGroup: UserDefaults? = UserDefaults(suiteName: "group.com.deboraferreira.app-watch.app-groups")
+    static let defaultsGroup: UserDefaults? = UserDefaults(suiteName: "group.br.com.crono.watchapp")
     
     private static let snapshotKey = "weatherSnapshot"
     private static let locationKey = "lastLocation"

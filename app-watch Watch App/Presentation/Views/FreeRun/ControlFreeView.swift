@@ -53,6 +53,7 @@ struct ControlFreeView: View {
                 label: "Editar metas",
                 variantStyle: .terciary,
                 action: {
+                    print("EDITAR CLICADO")
                     showEditGoals = true
                 }
             )

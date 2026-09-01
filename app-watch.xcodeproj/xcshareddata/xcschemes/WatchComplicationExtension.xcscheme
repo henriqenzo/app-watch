@@ -16,7 +16,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "4B9262C63038BC4D00230B59"
+               BlueprintIdentifier = "4BBD4F0430476B0E00716F53"
                BuildableName = "WatchComplicationExtension.appex"
                BlueprintName = "WatchComplicationExtension"
                ReferencedContainer = "container:app-watch.xcodeproj">
@@ -76,7 +76,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4B9262C63038BC4D00230B59"
+            BlueprintIdentifier = "4BBD4F0430476B0E00716F53"
             BuildableName = "WatchComplicationExtension.appex"
             BlueprintName = "WatchComplicationExtension"
             ReferencedContainer = "container:app-watch.xcodeproj">
@@ -119,7 +119,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4B9262C63038BC4D00230B59"
+            BlueprintIdentifier = "4BBD4F0430476B0E00716F53"
             BuildableName = "WatchComplicationExtension.appex"
             BlueprintName = "WatchComplicationExtension"
             ReferencedContainer = "container:app-watch.xcodeproj">
