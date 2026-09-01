@@ -28,6 +28,4 @@ protocol RunViewModelProtocol: AnyObject, Observable {
     func startRunning()
     func pauseResumeRunning()
     func stopRunning()
-    func editRunning()
-    
 }
