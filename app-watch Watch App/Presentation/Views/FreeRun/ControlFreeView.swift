@@ -71,6 +71,8 @@ struct ControlFreeView: View {
                             paceSeconds: paceSeconds,
                             ppm: ppm
                         )
+                    } else {
+                        assertionFailure("[ControlFreeView] freeViewModel não é FreeRunViewModel — updateGoals não foi chamado.")
                     }
                 }
             }
